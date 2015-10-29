@@ -1,0 +1,6 @@
+[submodule "gnip-powertrack"]
+	path = gnip-powertrack
+	url = git@github.com:smart-facility/cognicity-reports-powertrack
+[submodule "twitter"]
+	path = twitter
+	url = git@github.com:smart-facility/cognicity-reports-twitter
