@@ -22,9 +22,9 @@
   },
   "scripts": {
     "test": "npm run jshint && npm run mocha",
-    "jshint": "jshint app.js BaseDataSource.js Harvester.js sample-reports-config.js test/test-config.js test/testApp.js test/testHarvester.js",
+    "jshint": "jshint app.js Harvester.js sample-reports-config.js test/test-config.js test/testApp.js test/testHarvester.js",
     "mocha": "mocha test",
-    "build-docs": "jsdoc -d docs package.json sample-reports-config.js app.js BaseDataSource.js Harvester.js",
+    "build-docs": "jsdoc -d docs package.json sample-reports-config.js app.js Harvester.js",
     "build": "npm test && npm run build-docs && npm run coverage",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha"
   }
