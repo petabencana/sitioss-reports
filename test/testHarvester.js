@@ -231,6 +231,41 @@ describe( 'Harvester', function() {
 		});
 	});
 	
+	describe( "start", function() {
+
+		var ds1Started = false;
+		var ds2Started = false;
+		var ds1 = {
+			start: function() {
+				ds1Started = true;
+			}	
+		};
+		var ds2 = {
+			start: function() {
+				ds2Started = true;
+			}	
+		};
+		
+		before( function() {			
+			harvester.addDataSource(ds1);
+			harvester.addDataSource(ds2);
+		});
+		
+		it( 'Start is called on all data sources', function() {
+			harvester.start();
+			test.value( ds1Started ).is ( true );
+			test.value( ds2Started ).is ( true );
+		});
+		
+		// Restore/erase mocked functions
+		after( function(){
+			harvester.config = {};
+			harvester.twitter = {};
+			harvester._dataSources = [];
+		});
+		
+	});
+	
 	// TODO addDataSource
 	// TODO start
 	// TODO stop
