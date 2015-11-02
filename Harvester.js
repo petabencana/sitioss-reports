@@ -138,9 +138,9 @@ Harvester.prototype = {
 		
 		// TODO validate config
 		
-		//TODOconsole.log("starting datasources: " + self._dataSources);
+		// TODO console.log("starting datasources: " + self._dataSources);
 		self._dataSources.forEach( function(dataSource) {
-			//TODOconsole.log("starting datasource "+dataSource);
+			// TODO console.log("starting datasource "+dataSource);
 			dataSource.start();
 		});
 	},
@@ -155,6 +155,7 @@ Harvester.prototype = {
 		
 		// TODO Do we need to delay or check when these have finished?
 		self._dataSources.forEach( function(dataSource) {
+			// TODO Only call stop if it exists?
 			dataSource.stop();
 		});
 	},
