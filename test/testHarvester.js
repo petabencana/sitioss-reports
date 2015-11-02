@@ -235,6 +235,7 @@ describe( 'Harvester', function() {
 	// TODO start
 	// TODO stop
 	// TODO validateConfig
+	// TODO enable/disable cache mode
 	
 // Test template
 //	describe( "suite", function() {

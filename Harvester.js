@@ -126,6 +126,7 @@ Harvester.prototype = {
 	 */
 	validateConfig: function() {
 		// TODO check areTweetMessageLengthsOk
+		// TODO validate config on data sources?
 	},
 	
 	/**
@@ -135,11 +136,9 @@ Harvester.prototype = {
 	start: function() {
 		var self = this;
 		
-		// TODO validate config
+		self.validateConfig();
 		
-		// TODO console.log("starting datasources: " + self._dataSources);
 		self._dataSources.forEach( function(dataSource) {
-			// TODO console.log("starting datasource "+dataSource);
 			dataSource.start();
 		});
 	},
@@ -153,8 +152,9 @@ Harvester.prototype = {
 		
 		// TODO Do we need to delay or check when these have finished?
 		self._dataSources.forEach( function(dataSource) {
-			// TODO Only call stop if it exists?
-			dataSource.stop();
+			if (dataSource.stop) {
+				dataSource.stop();
+			}
 		});
 	},
 	
@@ -166,7 +166,9 @@ Harvester.prototype = {
 		var self = this;
 		
 		self._dataSources.forEach( function(dataSource) {
-			dataSource.enableCacheMode();
+			if (dataSource.enableCacheMode) {
+				dataSource.enableCacheMode();
+			}
 		});
 	},
 	
@@ -178,7 +180,9 @@ Harvester.prototype = {
 		var self = this;
 		
 		self._dataSources.forEach( function(dataSource) {
-			dataSource.disableCacheMode();
+			if (dataSource.disableCacheMode) {
+				dataSource.disableCacheMode();
+			}
 		});
 	},
 	
