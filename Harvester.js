@@ -131,7 +131,6 @@ Harvester.prototype = {
 	/**
 	 * Start harvesting data.
 	 * This will call start() on each data source.
-	 * @see {@link BaseDataSource.start}
 	 */
 	start: function() {
 		var self = this;
@@ -148,7 +147,6 @@ Harvester.prototype = {
 	/**
 	 * Stop the harvester.
 	 * This will call stop() on each data source.
-	 * @see {@link BaseDataSource.stop}
 	 */
 	stop: function() {
 		var self = this;
@@ -157,6 +155,30 @@ Harvester.prototype = {
 		self._dataSources.forEach( function(dataSource) {
 			// TODO Only call stop if it exists?
 			dataSource.stop();
+		});
+	},
+	
+	/**
+	 * Enable caching mode, ask each data source to hold processing until DB is ready.
+	 * This will call enableCacheMode() on each data source.
+	 */
+	enableCacheMode: function() {
+		var self = this;
+		
+		self._dataSources.forEach( function(dataSource) {
+			dataSource.enableCacheMode();
+		});
+	},
+	
+	/**
+	 * Disable caching mode, ask each data source to hold processing until DB is ready.
+	 * This will call enableCacheMode() on each data source.
+	 */
+	disableCacheMode: function() {
+		var self = this;
+		
+		self._dataSources.forEach( function(dataSource) {
+			dataSource.disableCacheMode();
 		});
 	},
 	

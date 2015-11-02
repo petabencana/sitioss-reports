@@ -37,6 +37,8 @@ describe( 'app.js', function() {
 		// Start waiting for the child process to exit
 		waitForChild();
 	});
+	
+	// TODO enable/disable cache mode
 
 });
 
