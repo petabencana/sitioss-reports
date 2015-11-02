@@ -231,6 +231,36 @@ describe( 'Harvester', function() {
 		});
 	});
 	
+	describe( "addDataSource", function() {
+
+		var ds1 = {
+			id: 1
+		};
+		var ds2 = {
+			id: 2
+		};
+		
+		it( 'ds1 is added', function() {
+			test.value( harvester._dataSources.length ).is ( 0 );
+			harvester.addDataSource(ds1);
+			test.value( harvester._dataSources.length ).is ( 1 );
+			test.value( harvester._dataSources[0].id ).is ( 1 );
+		});
+
+		it( 'ds2 is added', function() {
+			harvester.addDataSource(ds2);
+			test.value( harvester._dataSources.length ).is ( 2 );
+			test.value( harvester._dataSources[0].id ).is ( 1 );
+			test.value( harvester._dataSources[1].id ).is ( 2 );
+		});
+
+		// Restore/erase mocked functions
+		after( function(){
+			harvester._dataSources = [];
+		});
+		
+	});
+	
 	describe( "start", function() {
 
 		var ds1Started = false;
@@ -251,7 +281,7 @@ describe( 'Harvester', function() {
 			harvester.addDataSource(ds2);
 		});
 		
-		it( 'Start is called on all data sources', function() {
+		it( 'start() is called on all data sources', function() {
 			harvester.start();
 			test.value( ds1Started ).is ( true );
 			test.value( ds2Started ).is ( true );
@@ -266,11 +296,112 @@ describe( 'Harvester', function() {
 		
 	});
 	
-	// TODO addDataSource
-	// TODO start
-	// TODO stop
+	describe( "stop", function() {
+
+		var ds1Stopped = false;
+		var ds2Stopped = false;
+		var ds1 = {
+			stop: function() {
+				ds1Stopped = true;
+			}	
+		};
+		var ds2 = {
+			stop: function() {
+				ds2Stopped = true;
+			}	
+		};
+		
+		before( function() {			
+			harvester.addDataSource(ds1);
+			harvester.addDataSource(ds2);
+		});
+		
+		it( 'stop() is called on all data sources', function() {
+			harvester.stop();
+			test.value( ds1Stopped ).is ( true );
+			test.value( ds2Stopped ).is ( true );
+		});
+		
+		// Restore/erase mocked functions
+		after( function(){
+			harvester.config = {};
+			harvester.twitter = {};
+			harvester._dataSources = [];
+		});
+		
+	});
+	
+	describe( "enableCacheMode", function() {
+
+		var ds1EnableCacheModeCalled = false;
+		var ds2EnableCacheModeCalled = false;
+		var ds1 = {
+			enableCacheMode: function() {
+				ds1EnableCacheModeCalled = true;
+			}	
+		};
+		var ds2 = {
+			enableCacheMode: function() {
+				ds2EnableCacheModeCalled = true;
+			}	
+		};
+		
+		before( function() {			
+			harvester.addDataSource(ds1);
+			harvester.addDataSource(ds2);
+		});
+		
+		it( 'enableCacheMode() is called on all data sources', function() {
+			harvester.enableCacheMode();
+			test.value( ds1EnableCacheModeCalled ).is ( true );
+			test.value( ds2EnableCacheModeCalled ).is ( true );
+		});
+		
+		// Restore/erase mocked functions
+		after( function(){
+			harvester.config = {};
+			harvester.twitter = {};
+			harvester._dataSources = [];
+		});
+		
+	});
+	
+	describe( "disableCacheMode", function() {
+
+		var ds1DisableCacheModeCalled = false;
+		var ds2DisableCacheModeCalled = false;
+		var ds1 = {
+			disableCacheMode: function() {
+				ds1DisableCacheModeCalled = true;
+			}	
+		};
+		var ds2 = {
+			disableCacheMode: function() {
+				ds2DisableCacheModeCalled = true;
+			}	
+		};
+		
+		before( function() {			
+			harvester.addDataSource(ds1);
+			harvester.addDataSource(ds2);
+		});
+		
+		it( 'disableCacheMode() is called on all data sources', function() {
+			harvester.disableCacheMode();
+			test.value( ds1DisableCacheModeCalled ).is ( true );
+			test.value( ds2DisableCacheModeCalled ).is ( true );
+		});
+		
+		// Restore/erase mocked functions
+		after( function(){
+			harvester.config = {};
+			harvester.twitter = {};
+			harvester._dataSources = [];
+		});
+		
+	});
+	
 	// TODO validateConfig
-	// TODO enable/disable cache mode
 	
 // Test template
 //	describe( "suite", function() {
