@@ -56,6 +56,12 @@ Harvester.prototype = {
 	_dataSources: [],
 	
 	/**
+	 * DB query success callback
+	 * @callback DbQuerySuccess
+	 * @param {object} result The 'pg' module result object on a successful query
+	 */
+	
+	/**
 	 * Execute the SQL against the database connection. Run the success callback on success if supplied.
 	 * @param {object} config The pg config object for a parameterized query, e.g. {text:"select * from foo where a=$1", values:['bar']}
 	 * @param {string} config.text The SQL query to execute
