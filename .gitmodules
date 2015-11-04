@@ -4,3 +4,6 @@
 [submodule "twitter"]
 	path = twitter
 	url = git@github.com:smart-facility/cognicity-reports-twitter
+[submodule "detik"]
+	path = detik
+	url = git@github.com:smart-facility/cognicity-reports-detik.git
