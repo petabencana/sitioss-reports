@@ -45,7 +45,7 @@ Then you can run `npm install`.
 ### Data Sources
 You will need at least one data source configured to run the reports module.
 
-Cognicity data sources are committed as submodules of this reports module and will be checked out in the top level folder.
+Cognicity data sources are included as submodules of this master reports module.
 
 You will need to configure the reports module to use at least one of them (see Configuration section below).
 
