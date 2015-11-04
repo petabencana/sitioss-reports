@@ -5,6 +5,7 @@
 /**
  * Configuration for cognicity-reports-powertrack
  * @namespace {object} config
+ * @property {object} dataSources Array of datasource folder paths relative to the reports module
  * @property {?string} adminTwitterUsernames Twitter usernames (without @, comma separated for multiples) to send a notification tweet on error conditions
  * @property {object} logger Configuration object for logging module
  * @property {string} logger.level Logging level - info, verbose or debug are most useful. Levels are (npm defaults): silly, debug, verbose, info, warn, error.
