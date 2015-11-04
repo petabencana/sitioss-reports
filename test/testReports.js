@@ -3,11 +3,11 @@
 /* jshint -W079 */ // Ignore this error for this import only, as we get a redefinition problem
 var test = require('unit.js');
 /* jshint +W079 */
-var Harvester = require('../Harvester');
+var Reports = require('../Reports');
 
 // Create server with empty objects
 // We will mock these objects as required for each test suite
-var harvester = new Harvester(
+var reports = new Reports(
 	{},
 	{},
 	{},
@@ -15,7 +15,7 @@ var harvester = new Harvester(
 );
 
 // Mocked logger we can use to let code run without error when trying to call logger messages
-harvester.logger = {
+reports.logger = {
 	error:function(){},
 	warn:function(){},
 	info:function(){},
@@ -24,13 +24,13 @@ harvester.logger = {
 };
 
 // Test harness for CognicityReportsPowertrack object
-describe( 'Harvester', function() {
+describe( 'Reports', function() {
 	
 	// Test suite for dbQuery function
 	describe( 'dbQuery', function() {
 		before( function() {
 			// Mock required parts of the PG config
-			harvester.config = {
+			reports.config = {
 				'pg' : {
 					'conString' : ''
 				}
@@ -49,41 +49,41 @@ describe( 'Harvester', function() {
 			
 			// Mock the PG object to let us set error states
 			// Mock the connect and query methods to just pass through their arguments
-			harvester.pg = {
+			reports.pg = {
 				connectionErr: null,
 				connectionClient: {
 					query: function(config, handler) {
-						handler(harvester.pg.queryErr, harvester.pg.queryResult);
+						handler(reports.pg.queryErr, reports.pg.queryResult);
 					}
 				},
 				connectionDone: function(){},
 				queryErr: null,
 				queryResult: null,
 				connect : function(config, success) {
-					success(harvester.pg.connectionErr, harvester.pg.connectionClient, harvester.pg.connectionDone);
+					success(reports.pg.connectionErr, reports.pg.connectionClient, reports.pg.connectionDone);
 				}
 			};
 		});
 
 		it( 'Connection error does not run success handler', function() {
-			harvester.pg.connectionErr = true;
-			harvester.dbQuery("", successHandler);
+			reports.pg.connectionErr = true;
+			reports.dbQuery("", successHandler);
 			test.value( successful ).isFalse();
 		});
 		it( 'Query error does not run success handler', function() {
-			harvester.pg.queryErr = true;
-			harvester.dbQuery("", successHandler);
+			reports.pg.queryErr = true;
+			reports.dbQuery("", successHandler);
 			test.value( successful ).isFalse();
 		});
 		it( 'No error does run success handler', function() {
-			harvester.dbQuery("", successHandler);
+			reports.dbQuery("", successHandler);
 			test.value( successful ).isTrue();
 		});
 		
 		// Restore/erase mocked functions
 		after( function(){
-			harvester.config = {};
-			harvester.pg = {};
+			reports.config = {};
+			reports.pg = {};
 		});
 	});
 	
@@ -94,7 +94,7 @@ describe( 'Harvester', function() {
 
 		before( function() {			
 			// Capture the number of times we send a message via twitter
-			harvester.twitter = {
+			reports.twitter = {
 				updateStatus: function() { notifiedTimes++; }	
 			};
 		});
@@ -105,31 +105,31 @@ describe( 'Harvester', function() {
 		});
 		
 		it( 'No usernames does not send tweets', function() {
-			harvester.config.adminTwitterUsernames = undefined;
-			harvester.tweetAdmin( message );
-			harvester.config.adminTwitterUsernames = null;
-			harvester.tweetAdmin( message );
-			harvester.config.adminTwitterUsernames = '';
-			harvester.tweetAdmin( message );
+			reports.config.adminTwitterUsernames = undefined;
+			reports.tweetAdmin( message );
+			reports.config.adminTwitterUsernames = null;
+			reports.tweetAdmin( message );
+			reports.config.adminTwitterUsernames = '';
+			reports.tweetAdmin( message );
 			test.value( notifiedTimes ).is ( 0 );
 		});
 		
 		it( 'Notification tweet is sent to a single user', function() {
-			harvester.config.adminTwitterUsernames = "mario";
-			harvester.tweetAdmin( message );
+			reports.config.adminTwitterUsernames = "mario";
+			reports.tweetAdmin( message );
 			test.value( notifiedTimes ).is ( 1 );
 		});
 		
 		it( 'Notification tweet is sent to multiple users', function() {
-			harvester.config.adminTwitterUsernames = "mario, peach";
-			harvester.tweetAdmin( message );
+			reports.config.adminTwitterUsernames = "mario, peach";
+			reports.tweetAdmin( message );
 			test.value( notifiedTimes ).is ( 2 );
 		});
 		
 		// Restore/erase mocked functions
 		after( function(){
-			harvester.config = {};
-			harvester.twitter = {};
+			reports.config = {};
+			reports.twitter = {};
 		});
 		
 	});
@@ -147,59 +147,59 @@ describe( 'Harvester', function() {
 		});
 		
 		beforeEach( function() {
-			harvester.config = {
+			reports.config = {
 				twitter: {}	
 			};
 		});
 		
 		it( 'Non-object properties are not tested', function() {
-			harvester.config.twitter = {
+			reports.config.twitter = {
 				singleProperty : createString(200)
 			};
 			
-			test.value( harvester.areTweetMessageLengthsOk() ).is( true );
+			test.value( reports.areTweetMessageLengthsOk() ).is( true );
 		});
 
 		it( 'Single short message is ok', function() {
-			harvester.config.twitter = {
+			reports.config.twitter = {
 				messageObject : {
 					'en' : createString(1)
 				}
 			};
-			test.value( harvester.areTweetMessageLengthsOk() ).is( true );
+			test.value( reports.areTweetMessageLengthsOk() ).is( true );
 		});
 
 		it( 'Single long message is not ok', function() {
-			harvester.config.twitter = {
+			reports.config.twitter = {
 				messageObject : {
 					'en' : createString(124)
 				}
 			};
-			test.value( harvester.areTweetMessageLengthsOk() ).is( false );
+			test.value( reports.areTweetMessageLengthsOk() ).is( false );
 		});
 
 		it( 'Message over timestamp boundary is ok when timestamp is off', function() {
-			harvester.config.twitter = {
+			reports.config.twitter = {
 				messageObject : {
 					'en' : createString(120)
 				},
 				addTimestamp : false
 			};
-			test.value( harvester.areTweetMessageLengthsOk() ).is( true );
+			test.value( reports.areTweetMessageLengthsOk() ).is( true );
 		});
 
 		it( 'Message over timestamp boundary is not ok when timestamp is on', function() {
-			harvester.config.twitter = {
+			reports.config.twitter = {
 				messageObject : {
 					'en' : createString(120)
 				},
 				addTimestamp : true
 			};
-			test.value( harvester.areTweetMessageLengthsOk() ).is( false );
+			test.value( reports.areTweetMessageLengthsOk() ).is( false );
 		});
 
 		it( 'Multiple short messages are ok', function() {
-			harvester.config.twitter = {
+			reports.config.twitter = {
 				messageObject1 : {
 					'en' : createString(100),
 					'fr' : createString(100)
@@ -209,11 +209,11 @@ describe( 'Harvester', function() {
 					'fr' : createString(100)
 				}
 			};
-			test.value( harvester.areTweetMessageLengthsOk() ).is( true );
+			test.value( reports.areTweetMessageLengthsOk() ).is( true );
 		});
 
 		it( 'Long message and multiple short messages are not ok', function() {
-			harvester.config.twitter = {
+			reports.config.twitter = {
 				messageObject1 : {
 					'en' : createString(100),
 					'fr' : createString(100)
@@ -223,11 +223,11 @@ describe( 'Harvester', function() {
 					'fr' : createString(200)
 				}
 			};
-			test.value( harvester.areTweetMessageLengthsOk() ).is( false );
+			test.value( reports.areTweetMessageLengthsOk() ).is( false );
 		});
 
 		after( function(){
-			harvester.config = {};
+			reports.config = {};
 		});
 	});
 	
@@ -241,22 +241,22 @@ describe( 'Harvester', function() {
 		};
 		
 		it( 'ds1 is added', function() {
-			test.value( harvester._dataSources.length ).is ( 0 );
-			harvester.addDataSource(ds1);
-			test.value( harvester._dataSources.length ).is ( 1 );
-			test.value( harvester._dataSources[0].id ).is ( 1 );
+			test.value( reports._dataSources.length ).is ( 0 );
+			reports.addDataSource(ds1);
+			test.value( reports._dataSources.length ).is ( 1 );
+			test.value( reports._dataSources[0].id ).is ( 1 );
 		});
 
 		it( 'ds2 is added', function() {
-			harvester.addDataSource(ds2);
-			test.value( harvester._dataSources.length ).is ( 2 );
-			test.value( harvester._dataSources[0].id ).is ( 1 );
-			test.value( harvester._dataSources[1].id ).is ( 2 );
+			reports.addDataSource(ds2);
+			test.value( reports._dataSources.length ).is ( 2 );
+			test.value( reports._dataSources[0].id ).is ( 1 );
+			test.value( reports._dataSources[1].id ).is ( 2 );
 		});
 
 		// Restore/erase mocked functions
 		after( function(){
-			harvester._dataSources = [];
+			reports._dataSources = [];
 		});
 		
 	});
@@ -277,21 +277,21 @@ describe( 'Harvester', function() {
 		};
 		
 		before( function() {			
-			harvester.addDataSource(ds1);
-			harvester.addDataSource(ds2);
+			reports.addDataSource(ds1);
+			reports.addDataSource(ds2);
 		});
 		
 		it( 'start() is called on all data sources', function() {
-			harvester.start();
+			reports.start();
 			test.value( ds1Started ).is ( true );
 			test.value( ds2Started ).is ( true );
 		});
 		
 		// Restore/erase mocked functions
 		after( function(){
-			harvester.config = {};
-			harvester.twitter = {};
-			harvester._dataSources = [];
+			reports.config = {};
+			reports.twitter = {};
+			reports._dataSources = [];
 		});
 		
 	});
@@ -312,21 +312,21 @@ describe( 'Harvester', function() {
 		};
 		
 		before( function() {			
-			harvester.addDataSource(ds1);
-			harvester.addDataSource(ds2);
+			reports.addDataSource(ds1);
+			reports.addDataSource(ds2);
 		});
 		
 		it( 'stop() is called on all data sources', function() {
-			harvester.stop();
+			reports.stop();
 			test.value( ds1Stopped ).is ( true );
 			test.value( ds2Stopped ).is ( true );
 		});
 		
 		// Restore/erase mocked functions
 		after( function(){
-			harvester.config = {};
-			harvester.twitter = {};
-			harvester._dataSources = [];
+			reports.config = {};
+			reports.twitter = {};
+			reports._dataSources = [];
 		});
 		
 	});
@@ -347,21 +347,21 @@ describe( 'Harvester', function() {
 		};
 		
 		before( function() {			
-			harvester.addDataSource(ds1);
-			harvester.addDataSource(ds2);
+			reports.addDataSource(ds1);
+			reports.addDataSource(ds2);
 		});
 		
 		it( 'enableCacheMode() is called on all data sources', function() {
-			harvester.enableCacheMode();
+			reports.enableCacheMode();
 			test.value( ds1EnableCacheModeCalled ).is ( true );
 			test.value( ds2EnableCacheModeCalled ).is ( true );
 		});
 		
 		// Restore/erase mocked functions
 		after( function(){
-			harvester.config = {};
-			harvester.twitter = {};
-			harvester._dataSources = [];
+			reports.config = {};
+			reports.twitter = {};
+			reports._dataSources = [];
 		});
 		
 	});
@@ -382,21 +382,21 @@ describe( 'Harvester', function() {
 		};
 		
 		before( function() {			
-			harvester.addDataSource(ds1);
-			harvester.addDataSource(ds2);
+			reports.addDataSource(ds1);
+			reports.addDataSource(ds2);
 		});
 		
 		it( 'disableCacheMode() is called on all data sources', function() {
-			harvester.disableCacheMode();
+			reports.disableCacheMode();
 			test.value( ds1DisableCacheModeCalled ).is ( true );
 			test.value( ds2DisableCacheModeCalled ).is ( true );
 		});
 		
 		// Restore/erase mocked functions
 		after( function(){
-			harvester.config = {};
-			harvester.twitter = {};
-			harvester._dataSources = [];
+			reports.config = {};
+			reports.twitter = {};
+			reports._dataSources = [];
 		});
 		
 	});

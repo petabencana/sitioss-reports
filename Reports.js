@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * The Cognicity Reports data harvester.
+ * The Cognicity Reports data collection application.
  * Uses data source plugins to retrieve data from external sources and store in the Cognicity Server
  * database.
  * @constructor
@@ -10,7 +10,7 @@
  * @param {object} twitter Configured instance of twitter object from ntwitter module
  * @param {object} logger Configured instance of logger object from Winston module
  */
-var Harvester = function(
+var Reports = function(
 	config,
 	pg,
 	twitter,
@@ -23,7 +23,7 @@ var Harvester = function(
 	this.logger = logger;
 };
 
-Harvester.prototype = {
+Reports.prototype = {
 	
 	/**
 	 * Configuration object
@@ -136,7 +136,7 @@ Harvester.prototype = {
 	},
 	
 	/**
-	 * Start harvesting data.
+	 * Start collecting data.
 	 * This will call start() on each data source.
 	 */
 	start: function() {
@@ -150,7 +150,7 @@ Harvester.prototype = {
 	},
 	
 	/**
-	 * Stop the harvester.
+	 * Stop collecting data.
 	 * This will call stop() on each data source.
 	 */
 	stop: function() {
@@ -193,7 +193,7 @@ Harvester.prototype = {
 	},
 	
 	/**
-	 * Add the supplied data source to the harvester's list of data sources.
+	 * Add the supplied data source to the reports object's list of data sources.
 	 * @param {BaseDataSource} Data source to add.
 	 */
 	addDataSource: function(dataSource) {
@@ -235,5 +235,5 @@ Harvester.prototype = {
 	
 };
 
-// Export the Harvester constructor
-module.exports = Harvester;
+// Export the Reports constructor
+module.exports = Reports;

@@ -55,10 +55,11 @@ Data sources must have the following properties:
 ##### index.js
 An index.js file must be present in the top level of the module.
 
-The file must export a function which constructs a new instance of the data source. The method signature is:
+The file must export a function which constructs a new instance of the data source. The method takes an instance of the
+reports obect as an argument, and the method signature is:
 ```javascript
-function constructor( harvester ) {
-    // Return new instance - e.g.: return new PowertrackDataSource( harvester, config );
+function constructor( reports ) {
+    // Return new instance - e.g.: return new PowertrackDataSource( reports, config );
 }
 ```
 
