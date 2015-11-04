@@ -1,9 +1,9 @@
 [submodule "gnip-powertrack"]
 	path = gnip-powertrack
-	url = git@github.com:smart-facility/cognicity-reports-powertrack
+	url = https://github.com/smart-facility/cognicity-reports-powertrack.git
 [submodule "twitter"]
 	path = twitter
-	url = git@github.com:smart-facility/cognicity-reports-twitter
+	url = https://github.com/smart-facility/cognicity-reports-twitter.git
 [submodule "detik"]
 	path = detik
-	url = git@github.com:smart-facility/cognicity-reports-detik
+	url = https://github.com/smart-facility/cognicity-reports-detik.git
