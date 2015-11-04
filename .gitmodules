@@ -6,4 +6,4 @@
 	url = git@github.com:smart-facility/cognicity-reports-twitter
 [submodule "detik"]
 	path = detik
-	url = git@github.com:smart-facility/cognicity-reports-detik.git
+	url = git@github.com:smart-facility/cognicity-reports-detik
