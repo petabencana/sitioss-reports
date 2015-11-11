@@ -44,7 +44,7 @@
  */
 var config = {};
 
-config.dataSources = [ 'gnip-powertrack' ];
+config.dataSources = [ 'detik' ];
 
 // Notification settings
 config.adminTwitterUsernames = null; // Enter twitter usernames here (without @, comma separated for multiples) to send a notification tweet on error conditions
@@ -55,7 +55,7 @@ config.logger.level = "info"; // What level to log at; info, verbose or debug ar
 config.logger.maxFileSize = 1024 * 1024 * 100; // Max file size in bytes of each log file; default 100MB
 config.logger.maxFiles = 10; // Max number of log files kept
 config.logger.logDirectory = null; // Set this to a full path to a directory - if not set logs will be written to the application directory.
-config.logger.filename = 'cognicity-reports-powertrack'; // base filename to use
+config.logger.filename = 'cognicity-reports'; // base filename to use
 
 // Twitter app authentication details
 config.twitter = {};
