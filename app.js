@@ -90,7 +90,6 @@ twitter.verifyCredentials(function (err, data) {
 	}
 });
 
-
 var Reports = require('./Reports');
 /**
  * Instance of reports module.
@@ -162,14 +161,14 @@ if ( !reports.areTweetMessageLengthsOk() ) {
 // Load a data source plugin
 function loadDataSource( dataSourceFolder ) {
 	logger.info("Loading data source from: " + dataSourceFolder );
-	
+
 	// Find data source descriptor file (containing class name & config file name)
 	var dataSourceModule = require( "./" + dataSourceFolder );
 	// Construct instance of data source
 	var dataSource = dataSourceModule( reports );
 	// Add data source to reports
 	reports.addDataSource( dataSource );
-	
+
 	logger.info("Data source '" + dataSource.constructor.name + "' loaded");
 }
 
