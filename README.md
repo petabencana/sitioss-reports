@@ -62,6 +62,7 @@ function constructor( reports ) {
     // Return new instance - e.g.: return new PowertrackDataSource( reports, config );
 }
 ```
+The index.js file in turn can specify a config file specific to the submodule.
 
 ##### Data Source Object
 The data source object must implement the following method to start receiving data:
