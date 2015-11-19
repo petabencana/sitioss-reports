@@ -27,7 +27,7 @@ If you're going to commit changes to the JavaScript, be sure to run 'npm test' f
 ### Installation
 Download the source code for cognicity-reports from github: [http://github.com/smart-facility/cognicity-reports](https://github.com/smart-facility/cognicity-reports) or view the CogniCity installation documentation at [http://cognicity.info](http://cognicity.info).
 
-Install the node dependencies in package.json using NPM: `npm install`
+Install the node dependencies in package.json using NPM: `npm install`. You will need to repeat that for each of the submodules (in the submodule directories).
 
 #### Platform-specific notes ####
 To build on OS X we recommend using [homebrew](http://brew.sh) to install node, npm, and required node modules as follows:
@@ -171,11 +171,14 @@ For further details refer to the [README for pm2](https://github.com/Unitech/PM2
 
 #### Testing
 
+Note that the documentation here is for this master reports module, and each submodule has their own set of tests run in a similar manner. Please refer to the submodule documentation for further information.
+
 To run the full set of tests, run:
 
 ```shell
 npm test
 ```
+
 
 This will run the following tests:
 
