@@ -97,6 +97,7 @@ config.twitter.addTimestamp = true;
 config.pg = {};
 config.pg.conString = "postgres://postgres:password@localhost:5432/cognicity";
 // Database tables
+config.pg.all_reports = 'all_reports';
 config.pg.table_tweets = 'tweet_reports';
 config.pg.table_users = 'tweet_users';
 config.pg.table_invitees = 'tweet_invitees';
