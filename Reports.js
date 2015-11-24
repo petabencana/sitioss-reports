@@ -16,7 +16,7 @@ var Reports = function(
 	twitter,
 	logger
 	){
-	
+
 	this.config = config;
 	this.pg = pg;
 	this.twitter = twitter;
@@ -24,43 +24,43 @@ var Reports = function(
 };
 
 Reports.prototype = {
-	
+
 	/**
 	 * Configuration object
 	 * @type {config}
 	 */
 	config: null,
-	
+
 	/**
 	 * Configured instance of twitter object from ntwitter module
 	 * @type {object}
 	 */
 	twitter: null,
-	
+
 	/**
 	 * Configured instance of pg object from pg module
 	 * @type {object}
 	 */
 	pg: null,
-	
+
 	/**
 	 * Configured instance of logger object from Winston module
 	 * @type {object}
 	 */
 	logger: null,
-	
+
 	/**
 	 * The data sources used to retrieve data from external sources.
 	 * @type {Array}
 	 */
 	_dataSources: [],
-	
+
 	/**
 	 * DB query success callback
 	 * @callback DbQuerySuccess
 	 * @param {object} result The 'pg' module result object on a successful query
 	 */
-	
+
 	/**
 	 * Execute the SQL against the database connection. Run the success callback on success if supplied.
 	 * @param {object} config The pg config object for a parameterized query, e.g. {text:"select * from foo where a=$1", values:['bar']}
@@ -96,7 +96,7 @@ Reports.prototype = {
 			});
 		});
 	},
-	
+
 	/**
 	 * Tweet the admin usernames defined in 'adminTwitterUsernames' in config.
 	 * @param {string} warningMessage The message to tweet
@@ -125,7 +125,7 @@ Reports.prototype = {
 			if (callback) callback();
 		}
 	},
-	
+
 	/**
 	 * Verify that all necessary configuration has been supplied and is correct.
 	 * Exit with error if not.
@@ -134,28 +134,28 @@ Reports.prototype = {
 		// TODO check areTweetMessageLengthsOk
 		// TODO validate config on data sources?
 	},
-	
+
 	/**
 	 * Start collecting data.
 	 * This will call start() on each data source.
 	 */
 	start: function() {
 		var self = this;
-		
+
 		self.validateConfig();
-		
+
 		self._dataSources.forEach( function(dataSource) {
 			dataSource.start();
 		});
 	},
-	
+
 	/**
 	 * Stop collecting data.
 	 * This will call stop() on each data source.
 	 */
 	stop: function() {
 		var self = this;
-		
+
 		// TODO Do we need to delay or check when these have finished?
 		self._dataSources.forEach( function(dataSource) {
 			if (dataSource.stop) {
@@ -163,35 +163,35 @@ Reports.prototype = {
 			}
 		});
 	},
-	
+
 	/**
 	 * Enable caching mode, ask each data source to hold processing until DB is ready.
 	 * This will call enableCacheMode() on each data source.
 	 */
 	enableCacheMode: function() {
 		var self = this;
-		
+
 		self._dataSources.forEach( function(dataSource) {
 			if (dataSource.enableCacheMode) {
 				dataSource.enableCacheMode();
 			}
 		});
 	},
-	
+
 	/**
 	 * Disable caching mode, ask each data source to hold processing until DB is ready.
 	 * This will call enableCacheMode() on each data source.
 	 */
 	disableCacheMode: function() {
 		var self = this;
-		
+
 		self._dataSources.forEach( function(dataSource) {
 			if (dataSource.disableCacheMode) {
 				dataSource.disableCacheMode();
 			}
 		});
 	},
-	
+
 	/**
 	 * Add the supplied data source to the reports object's list of data sources.
 	 * @param {BaseDataSource} Data source to add.
@@ -200,7 +200,7 @@ Reports.prototype = {
 		var self = this;
 		self._dataSources.push( dataSource );
 	},
-	
+
 	/**
 	 * Check that all tweetable message texts are of an acceptable length.
 	 * This is 109 characters max if timestamps are enabled, or 123 characters max if timestamps are not enabled.
@@ -211,7 +211,7 @@ Reports.prototype = {
 	areTweetMessageLengthsOk: function() {
 		var self = this;
 		var lengthsOk = true;
-		
+
 		Object.keys( self.config.twitter ).forEach( function(configItemKey) {
 			// We only want to process the objects containing language/message pairs here,
 			// not the single properties.
@@ -219,6 +219,7 @@ Reports.prototype = {
 			if (typeof configItem === "object") {
 				var maxLength = 140; // Maximum tweet length
 				maxLength -= 17; // Minus username, @ sign and space = 123
+				maxLength =+ 24; // Difference between long and short URL
 				if ( self.config.twitter.addTimestamp ) maxLength -= 14; // Minus 13 digit timestamp + space = 109 (13 digit timestamp is ok until the year 2286)
 				Object.keys( configItem ).forEach( function(messageKey) {
 					var message = configItem[messageKey];
@@ -229,10 +230,10 @@ Reports.prototype = {
 				});
 			}
 		});
-		
+
 		return lengthsOk;
 	}
-	
+
 };
 
 // Export the Reports constructor
