@@ -219,7 +219,7 @@ Reports.prototype = {
 			if (typeof configItem === "object") {
 				var maxLength = 140; // Maximum tweet length
 				maxLength -= 17; // Minus username, @ sign and space = 123
-				maxLength =+ 24; // Difference between long and short URL
+				maxLength += 24; // Difference between long and short URL
 				if ( self.config.twitter.addTimestamp ) maxLength -= 14; // Minus 13 digit timestamp + space = 109 (13 digit timestamp is ok until the year 2286)
 				Object.keys( configItem ).forEach( function(messageKey) {
 					var message = configItem[messageKey];
