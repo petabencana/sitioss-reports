@@ -32,6 +32,7 @@
  * @property {boolean} twitter.addTimestamp If true, append a timestamp to each sent tweet
  * @property {object} pg Configuration object for PostGres interface
  * @property {string} pg.conString PostGres connection string
+ * @property {string} pg.table_all_reports Database table for reports from all sources
  * @property {string} pg.table_tweets Database table name for tweets
  * @property {string} pg.table_users Database table name for user information
  * @property {string} pg.table_invitees Database table name for users who have been tweeted
