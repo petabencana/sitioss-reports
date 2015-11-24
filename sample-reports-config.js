@@ -91,7 +91,7 @@ config.twitter.thanks_text = {
 	'id' : 'Thank-you Tweet Text [ID]',
 	'en' : 'Thank-you Tweet Text [EN]'
 };
-// Append a timestamp to each sent tweet
+// Append a timestamp to each sent tweet except response to confirmed reports with unique urls
 config.twitter.addTimestamp = true;
 
 // Postgres database connection
