@@ -25,7 +25,7 @@ reports.logger = {
 
 // Test harness for CognicityReportsPowertrack object
 describe( 'Reports', function() {
-	
+
 	// Test suite for dbQuery function
 	describe( 'dbQuery', function() {
 		before( function() {
@@ -36,17 +36,17 @@ describe( 'Reports', function() {
 				}
 			};
 		});
-		
+
 		// Setup a success handler which just flags whether it was run or not
 		var successful = false;
 		var successHandler = function(result) {
 			successful = true;
 		};
-		
+
 		beforeEach( function(){
 			// Reset our success handler state
 			successful = false;
-			
+
 			// Mock the PG object to let us set error states
 			// Mock the connect and query methods to just pass through their arguments
 			reports.pg = {
@@ -79,31 +79,31 @@ describe( 'Reports', function() {
 			reports.dbQuery("", successHandler);
 			test.value( successful ).isTrue();
 		});
-		
+
 		// Restore/erase mocked functions
 		after( function(){
 			reports.config = {};
 			reports.pg = {};
 		});
 	});
-	
+
 	describe( "tweetAdmin", function() {
 		var message = 'princess is in another castle';
-		
+
 		var notifiedTimes; // Number of times twitter notification was sent
 
-		before( function() {			
+		before( function() {
 			// Capture the number of times we send a message via twitter
 			reports.twitter = {
-				updateStatus: function() { notifiedTimes++; }	
+				updateStatus: function() { notifiedTimes++; }
 			};
 		});
-		
+
 		beforeEach( function() {
 			// Reset capture variables
 			notifiedTimes = 0;
 		});
-		
+
 		it( 'No usernames does not send tweets', function() {
 			reports.config.adminTwitterUsernames = undefined;
 			reports.tweetAdmin( message );
@@ -113,25 +113,25 @@ describe( 'Reports', function() {
 			reports.tweetAdmin( message );
 			test.value( notifiedTimes ).is ( 0 );
 		});
-		
+
 		it( 'Notification tweet is sent to a single user', function() {
 			reports.config.adminTwitterUsernames = "mario";
 			reports.tweetAdmin( message );
 			test.value( notifiedTimes ).is ( 1 );
 		});
-		
+
 		it( 'Notification tweet is sent to multiple users', function() {
 			reports.config.adminTwitterUsernames = "mario, peach";
 			reports.tweetAdmin( message );
 			test.value( notifiedTimes ).is ( 2 );
 		});
-		
+
 		// Restore/erase mocked functions
 		after( function(){
 			reports.config = {};
 			reports.twitter = {};
 		});
-		
+
 	});
 
 	describe( "areTweetMessageLengthsOk", function() {
@@ -142,21 +142,21 @@ describe( 'Reports', function() {
 			}
 			return s;
 		}
-		
+
 		before( function() {
 		});
-		
+
 		beforeEach( function() {
 			reports.config = {
-				twitter: {}	
+				twitter: {}
 			};
 		});
-		
+
 		it( 'Non-object properties are not tested', function() {
 			reports.config.twitter = {
 				singleProperty : createString(200)
 			};
-			
+
 			test.value( reports.areTweetMessageLengthsOk() ).is( true );
 		});
 
@@ -172,7 +172,7 @@ describe( 'Reports', function() {
 		it( 'Single long message is not ok', function() {
 			reports.config.twitter = {
 				messageObject : {
-					'en' : createString(124)
+					'en' : createString(148)
 				}
 			};
 			test.value( reports.areTweetMessageLengthsOk() ).is( false );
@@ -191,7 +191,7 @@ describe( 'Reports', function() {
 		it( 'Message over timestamp boundary is not ok when timestamp is on', function() {
 			reports.config.twitter = {
 				messageObject : {
-					'en' : createString(120)
+					'en' : createString(134)
 				},
 				addTimestamp : true
 			};
@@ -230,7 +230,7 @@ describe( 'Reports', function() {
 			reports.config = {};
 		});
 	});
-	
+
 	describe( "addDataSource", function() {
 
 		var ds1 = {
@@ -239,7 +239,7 @@ describe( 'Reports', function() {
 		var ds2 = {
 			id: 2
 		};
-		
+
 		it( 'ds1 is added', function() {
 			test.value( reports._dataSources.length ).is ( 0 );
 			reports.addDataSource(ds1);
@@ -258,9 +258,9 @@ describe( 'Reports', function() {
 		after( function(){
 			reports._dataSources = [];
 		});
-		
+
 	});
-	
+
 	describe( "start", function() {
 
 		var ds1Started = false;
@@ -268,34 +268,34 @@ describe( 'Reports', function() {
 		var ds1 = {
 			start: function() {
 				ds1Started = true;
-			}	
+			}
 		};
 		var ds2 = {
 			start: function() {
 				ds2Started = true;
-			}	
+			}
 		};
-		
-		before( function() {			
+
+		before( function() {
 			reports.addDataSource(ds1);
 			reports.addDataSource(ds2);
 		});
-		
+
 		it( 'start() is called on all data sources', function() {
 			reports.start();
 			test.value( ds1Started ).is ( true );
 			test.value( ds2Started ).is ( true );
 		});
-		
+
 		// Restore/erase mocked functions
 		after( function(){
 			reports.config = {};
 			reports.twitter = {};
 			reports._dataSources = [];
 		});
-		
+
 	});
-	
+
 	describe( "stop", function() {
 
 		var ds1Stopped = false;
@@ -303,34 +303,34 @@ describe( 'Reports', function() {
 		var ds1 = {
 			stop: function() {
 				ds1Stopped = true;
-			}	
+			}
 		};
 		var ds2 = {
 			stop: function() {
 				ds2Stopped = true;
-			}	
+			}
 		};
-		
-		before( function() {			
+
+		before( function() {
 			reports.addDataSource(ds1);
 			reports.addDataSource(ds2);
 		});
-		
+
 		it( 'stop() is called on all data sources', function() {
 			reports.stop();
 			test.value( ds1Stopped ).is ( true );
 			test.value( ds2Stopped ).is ( true );
 		});
-		
+
 		// Restore/erase mocked functions
 		after( function(){
 			reports.config = {};
 			reports.twitter = {};
 			reports._dataSources = [];
 		});
-		
+
 	});
-	
+
 	describe( "enableCacheMode", function() {
 
 		var ds1EnableCacheModeCalled = false;
@@ -338,34 +338,34 @@ describe( 'Reports', function() {
 		var ds1 = {
 			enableCacheMode: function() {
 				ds1EnableCacheModeCalled = true;
-			}	
+			}
 		};
 		var ds2 = {
 			enableCacheMode: function() {
 				ds2EnableCacheModeCalled = true;
-			}	
+			}
 		};
-		
-		before( function() {			
+
+		before( function() {
 			reports.addDataSource(ds1);
 			reports.addDataSource(ds2);
 		});
-		
+
 		it( 'enableCacheMode() is called on all data sources', function() {
 			reports.enableCacheMode();
 			test.value( ds1EnableCacheModeCalled ).is ( true );
 			test.value( ds2EnableCacheModeCalled ).is ( true );
 		});
-		
+
 		// Restore/erase mocked functions
 		after( function(){
 			reports.config = {};
 			reports.twitter = {};
 			reports._dataSources = [];
 		});
-		
+
 	});
-	
+
 	describe( "disableCacheMode", function() {
 
 		var ds1DisableCacheModeCalled = false;
@@ -373,49 +373,49 @@ describe( 'Reports', function() {
 		var ds1 = {
 			disableCacheMode: function() {
 				ds1DisableCacheModeCalled = true;
-			}	
+			}
 		};
 		var ds2 = {
 			disableCacheMode: function() {
 				ds2DisableCacheModeCalled = true;
-			}	
+			}
 		};
-		
-		before( function() {			
+
+		before( function() {
 			reports.addDataSource(ds1);
 			reports.addDataSource(ds2);
 		});
-		
+
 		it( 'disableCacheMode() is called on all data sources', function() {
 			reports.disableCacheMode();
 			test.value( ds1DisableCacheModeCalled ).is ( true );
 			test.value( ds2DisableCacheModeCalled ).is ( true );
 		});
-		
+
 		// Restore/erase mocked functions
 		after( function(){
 			reports.config = {};
 			reports.twitter = {};
 			reports._dataSources = [];
 		});
-		
+
 	});
-	
+
 	// TODO validateConfig
-	
+
 // Test template
 //	describe( "suite", function() {
-//		before( function() {	
+//		before( function() {
 //		});
-//		
+//
 //		beforeEach( function() {
 //		});
-//		
+//
 //		it( 'case', function() {
 //		});
 //
 //		after( function(){
 //		});
 //	});
-	
+
 });
