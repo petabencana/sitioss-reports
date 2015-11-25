@@ -219,11 +219,18 @@ Reports.prototype = {
 			if (typeof configItem === "object") {
 				var maxLength = 140; // Maximum tweet length
 				maxLength -= 17; // Minus username, @ sign and space = 123
-				maxLength += 24; // Difference between long and short URL
 				if ( self.config.twitter.addTimestamp ) maxLength -= 14; // Minus 13 digit timestamp + space = 109 (13 digit timestamp is ok until the year 2286)
 				Object.keys( configItem ).forEach( function(messageKey) {
 					var message = configItem[messageKey];
-					if ( message.length > maxLength ) {
+					// Twitter shortens (or in some cases lengthens) all URLs to 22 characters https://support.twitter.com/articles/78124
+					// Thus here we subtract the length of the url and replace it with 22 characters
+					var length = message.length
+					var matches = message.match(/http[^ ]*/g);
+					for (var i = 0; i < matches.length; i++) {
+						length += 22 - matches[i].length;
+					}
+						
+					if ( length > maxLength ) {
 						self.logger.error( "Message " + configItemKey + "." + messageKey + " '" + message + "' is too long (" + message.length + " chars)" );
 						lengthsOk = false;
 					}
