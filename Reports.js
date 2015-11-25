@@ -226,8 +226,10 @@ Reports.prototype = {
 					// Thus here we subtract the length of the url and replace it with 22 characters
 					var length = message.length;
 					var matches = message.match(/http[^ ]*/g);
-					for (var i = 0; i < matches.length; i++) {
-						length += 22 - matches[i].length;
+					if (matches) {
+						for (var i = 0; i < matches.length; i++) {
+							length += 22 - matches[i].length;
+						}
 					}
 
 					if ( length > maxLength ) {
