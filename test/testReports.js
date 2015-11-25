@@ -172,7 +172,7 @@ describe( 'Reports', function() {
 		it( 'Single long message is not ok', function() {
 			reports.config.twitter = {
 				messageObject : {
-					'en' : createString(148)
+					'en' : createString(124)
 				}
 			};
 			test.value( reports.areTweetMessageLengthsOk() ).is( false );
@@ -191,7 +191,7 @@ describe( 'Reports', function() {
 		it( 'Message over timestamp boundary is not ok when timestamp is on', function() {
 			reports.config.twitter = {
 				messageObject : {
-					'en' : createString(134)
+					'en' : createString(120)
 				},
 				addTimestamp : true
 			};
