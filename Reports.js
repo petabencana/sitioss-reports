@@ -224,12 +224,12 @@ Reports.prototype = {
 					var message = configItem[messageKey];
 					// Twitter shortens (or in some cases lengthens) all URLs to 22 characters https://support.twitter.com/articles/78124
 					// Thus here we subtract the length of the url and replace it with 22 characters
-					var length = message.length
+					var length = message.length;
 					var matches = message.match(/http[^ ]*/g);
 					for (var i = 0; i < matches.length; i++) {
 						length += 22 - matches[i].length;
 					}
-						
+
 					if ( length > maxLength ) {
 						self.logger.error( "Message " + configItemKey + "." + messageKey + " '" + message + "' is too long (" + message.length + " chars)" );
 						lengthsOk = false;
