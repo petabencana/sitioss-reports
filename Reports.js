@@ -222,13 +222,14 @@ Reports.prototype = {
 				if ( self.config.twitter.addTimestamp ) maxLength -= 14; // Minus 13 digit timestamp + space = 109 (13 digit timestamp is ok until the year 2286)
 				Object.keys( configItem ).forEach( function(messageKey) {
 					var message = configItem[messageKey];
-					// Twitter shortens (or in some cases lengthens) all URLs to 22 characters https://support.twitter.com/articles/78124
-					// Thus here we subtract the length of the url and replace it with 22 characters
+					// Twitter shortens (or in some cases lengthens) all URLs to 23 characters
+					// https://support.twitter.com/articles/78124 incorrectly lists 22, I have triple checked with a test tweet.
+					// Thus here we subtract the length of the url and replace it with 23 characters
 					var length = message.length;
 					var matches = message.match(/http[^ ]*/g);
 					if (matches) {
 						for (var i = 0; i < matches.length; i++) {
-							length += 22 - matches[i].length;
+							length += 23 - matches[i].length;
 						}
 					}
 
