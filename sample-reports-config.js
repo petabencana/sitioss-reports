@@ -14,6 +14,7 @@
  * @property {?string} logger.logDirectory Full path to directory for log files - if null, logs will be written to the application directory
  * @property {string} logger.filename Name of log file
  * @property {object} twitter Configuration object for Twitter interface
+ * @property {object} twitter.usernameVerify Twitter username (without @) authorised to verify reports via retweet functionality
  * @property {string} twitter.usernameReplyBlacklist Twitter usernames (without @, comma separated for multiples) which will never be responded to as part of tweet processing
  * @property {string} twitter.consumer_key Take from the twitter dev admin interface
  * @property {string} twitter.consumer_secret Take from the twitter dev admin interface
@@ -60,6 +61,7 @@ config.logger.filename = 'cognicity-reports'; // base filename to use
 
 // Twitter app authentication details
 config.twitter = {};
+config.twitter.usernameVerify = ''; // Twitter username (without @) authorised to verify reports via retweet functionality
 config.twitter.usernameReplyBlacklist = ''; // Twitter usernames (without @, comma separated for multiples) which will never be sent to in response to tweet processing
 config.twitter.consumer_key = ''; // Take from the twitter dev admin interface
 config.twitter.consumer_secret = ''; // Take from the twitter dev admin interface
