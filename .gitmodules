@@ -7,3 +7,6 @@
 [submodule "detik"]
 	path = detik
 	url = https://github.com/smart-facility/cognicity-reports-detik.git
+[submodule "qlue"]
+	path = qlue
+	url = git@github.com:smart-facility/cognicity-reports-qlue.git
