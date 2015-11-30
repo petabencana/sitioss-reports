@@ -2,7 +2,6 @@ Database reconnection
 ---------------------
 
 To test database error reconnection:
-
 - Start reports app with Gnip data source
 - Wait until data source is running
 - Tail application log
