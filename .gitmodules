@@ -9,4 +9,4 @@
 	url = https://github.com/smart-facility/cognicity-reports-detik.git
 [submodule "qlue"]
 	path = qlue
-	url = https://github.com:smart-facility/cognicity-reports-qlue.git
+	url = https://github.com/smart-facility/cognicity-reports-qlue.git
