@@ -40,15 +40,6 @@ config.logger.filename = 'cognicity-reports'; // base filename to use
 // Postgres database connection
 config.pg = {};
 config.pg.conString = "postgres://postgres:password@localhost:5432/cognicity";
-// Database tables
-config.pg.all_reports = 'all_reports';
-config.pg.table_tweets = 'tweet_reports';
-config.pg.table_users = 'tweet_users';
-config.pg.table_invitees = 'tweet_invitees';
-config.pg.table_unconfirmed = 'tweet_reports_unconfirmed';
-config.pg.table_nonspatial_users = 'nonspatial_tweet_users';
-config.pg.table_nonspatial_tweet_reports = 'nonspatial_tweet_reports';
-config.pg.table_all_users = 'tweet_all_users';
 // Database reconnection settings
 config.pg.reconnectionDelay = 1000 * 60 * 3; // Delay before attempting a reconnection in ms
 config.pg.reconnectionAttempts = 5; // Number of times to attempt reconnection before notifying admin and exiting
