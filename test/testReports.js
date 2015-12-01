@@ -87,53 +87,6 @@ describe( 'Reports', function() {
 		});
 	});
 
-	describe( "tweetAdmin", function() {
-		var message = 'princess is in another castle';
-
-		var notifiedTimes; // Number of times twitter notification was sent
-
-		before( function() {
-			// Capture the number of times we send a message via twitter
-			reports.twitter = {
-				updateStatus: function() { notifiedTimes++; }
-			};
-		});
-
-		beforeEach( function() {
-			// Reset capture variables
-			notifiedTimes = 0;
-		});
-
-		it( 'No usernames does not send tweets', function() {
-			reports.config.adminTwitterUsernames = undefined;
-			reports.tweetAdmin( message );
-			reports.config.adminTwitterUsernames = null;
-			reports.tweetAdmin( message );
-			reports.config.adminTwitterUsernames = '';
-			reports.tweetAdmin( message );
-			test.value( notifiedTimes ).is ( 0 );
-		});
-
-		it( 'Notification tweet is sent to a single user', function() {
-			reports.config.adminTwitterUsernames = "mario";
-			reports.tweetAdmin( message );
-			test.value( notifiedTimes ).is ( 1 );
-		});
-
-		it( 'Notification tweet is sent to multiple users', function() {
-			reports.config.adminTwitterUsernames = "mario, peach";
-			reports.tweetAdmin( message );
-			test.value( notifiedTimes ).is ( 2 );
-		});
-
-		// Restore/erase mocked functions
-		after( function(){
-			reports.config = {};
-			reports.twitter = {};
-		});
-
-	});
-
 	describe( "areTweetMessageLengthsOk", function() {
 		function createString(length) {
 			var s = "";

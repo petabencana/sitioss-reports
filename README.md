@@ -107,12 +107,6 @@ App configuration parameters are stored in a configuration file which is parsed 
 Set the app authentication parameters as provided by Twitter. See the [ntwitter-module](https://github.com/AvianFlu/ntwitter) documentation for more details.
 * usernameReplyBlacklist - Twitter usernames (without @, comma separated for multiples) which will never be sent to in response to tweet processing
 
-#### Twitter warning configuration
-* adminTwitterUsernames - Enter twitter usernames here (without @, comma separated for multiples) to send a notification tweet on error conditions
-Notification conditions are:
-* Gnip stream is disconnected and reaches `maxReconnectTimeout` time trying to reconnect
-* Connection to postgres is lost and cannot be reconnected in `pg.reconnectionAttempts` number of attempts
-
 #### Twitter send parameters
 * send_enabled [true | false] - set to true to enable confirmation request tweets to be sent.
 * addTimestamp [true | false] - if true, append a timestamp to each sent tweet.

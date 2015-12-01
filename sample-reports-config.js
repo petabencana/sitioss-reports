@@ -6,7 +6,6 @@
  * Configuration for cognicity-reports-powertrack
  * @namespace {object} config
  * @property {object} dataSources Array of datasource folder paths relative to the reports module
- * @property {?string} adminTwitterUsernames Twitter usernames (without @, comma separated for multiples) to send a notification tweet on error conditions
  * @property {object} logger Configuration object for logging module
  * @property {string} logger.level Logging level - info, verbose or debug are most useful. Levels are (npm defaults): silly, debug, verbose, info, warn, error.
  * @property {number} logger.maxFileSize Max file size in bytes of each log file
@@ -47,9 +46,6 @@
 var config = {};
 
 config.dataSources = [ 'detik' ];
-
-// Notification settings
-config.adminTwitterUsernames = null; // Enter twitter usernames here (without @, comma separated for multiples) to send a notification tweet on error conditions
 
 // Logging configuration
 config.logger = {};

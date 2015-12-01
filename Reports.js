@@ -98,35 +98,6 @@ Reports.prototype = {
 	},
 
 	/**
-	 * Tweet the admin usernames defined in 'adminTwitterUsernames' in config.
-	 * @param {string} warningMessage The message to tweet
-	 * @param {function} callback Callback to execute after tweet sending
-	 */
-	tweetAdmin: function(warningMessage, callback) {
-		var self = this;
-
-		// Send notification tweet if we have a configured username
-		if (self.config.adminTwitterUsernames) {
-			// Construct the notification messages for each user.
-			self.config.adminTwitterUsernames.split(",").forEach( function(username){
-				var trimmedUsername = username.trim();
-				// Always timestamp this, otherwise the messages will always look the same and won't post.
-				var message = '@' + trimmedUsername +
-					' ' + warningMessage +
-					" " + new Date().getTime();
-
-				self.logger.warn( 'tweetAdmin: Tweeting warning: "' + message + '"' );
-				self.twitter.updateStatus(message, function(err, data){
-					if (err) self.logger.error('tweetAdmin: Tweeting failed: ' + err);
-					if (callback) callback();
-				});
-			});
-		} else {
-			if (callback) callback();
-		}
-	},
-
-	/**
 	 * Verify that all necessary configuration has been supplied and is correct.
 	 * Exit with error if not.
 	 */
