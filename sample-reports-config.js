@@ -12,24 +12,6 @@
  * @property {number} logger.maxFiles Max number of log files kept
  * @property {?string} logger.logDirectory Full path to directory for log files - if null, logs will be written to the application directory
  * @property {string} logger.filename Name of log file
- * @property {object} twitter Configuration object for Twitter interface
- * @property {object} twitter.usernameVerify Twitter username (without @) authorised to verify reports via retweet functionality
- * @property {string} twitter.usernameReplyBlacklist Twitter usernames (without @, comma separated for multiples) which will never be responded to as part of tweet processing
- * @property {string} twitter.consumer_key Take from the twitter dev admin interface
- * @property {string} twitter.consumer_secret Take from the twitter dev admin interface
- * @property {string} twitter.access_token_key Take from the twitter dev admin interface
- * @property {string} twitter.access_token_secret Take from the twitter dev admin interface
- * @property {string} twitter.defaultLanguage The default language code to use if we can't resolve one from the tweet
- * @property {object} twitter.invite_text Object of twitter message texts mapping a language code to a message
- * @property {string} twitter.invite_text.(name) Language code to resolve
- * @property {string} twitter.invite_text.(value) Message to be tweeted
- * @property {object} twitter.askforgeo_text Object of twitter message texts mapping a language code to a message
- * @property {string} twitter.askforgeo_text.(name) Language code to resolve
- * @property {string} twitter.askforgeo_text.(value) Message to be tweeted
- * @property {object} twitter.thanks_text Object of twitter message texts mapping a language code to a message
- * @property {string} twitter.thanks_text.(name) Language code to resolve
- * @property {string} twitter.thanks_text.(value) Message to be tweeted
- * @property {boolean} twitter.addTimestamp If true, append a timestamp to each sent tweet
  * @property {object} pg Configuration object for PostGres interface
  * @property {string} pg.conString PostGres connection string
  * @property {string} pg.table_all_reports Database table for reports from all sources
@@ -54,43 +36,6 @@ config.logger.maxFileSize = 1024 * 1024 * 100; // Max file size in bytes of each
 config.logger.maxFiles = 10; // Max number of log files kept
 config.logger.logDirectory = null; // Set this to a full path to a directory - if not set logs will be written to the application directory.
 config.logger.filename = 'cognicity-reports'; // base filename to use
-
-// Twitter app authentication details
-config.twitter = {};
-config.twitter.usernameVerify = ''; // Twitter username (without @) authorised to verify reports via retweet functionality
-config.twitter.usernameReplyBlacklist = ''; // Twitter usernames (without @, comma separated for multiples) which will never be sent to in response to tweet processing
-config.twitter.consumer_key = ''; // Take from the twitter dev admin interface
-config.twitter.consumer_secret = ''; // Take from the twitter dev admin interface
-config.twitter.access_token_key = ''; // Take from the twitter dev admin interface
-config.twitter.access_token_secret = ''; // Take from the twitter dev admin interface
-
-// Twitter parameters
-config.twitter.send_enabled = false; // Enable sending of tweets?
-
-// Twitter message texts
-// Note we use IN and ID because twitter and Gnip return different language codes for Indonesian
-// The messages should be no longer than 109 characters if timestamps are enabled, or 123 characters if timestamps are disabled
-config.twitter.defaultLanguage = 'en'; // The default language code to use if we can't resolve one from the tweet
-// Message codes. The name of the object (config.twitter.foo) is the name of the message type, that object should contain key value pairs
-// where the key is the language code to resolve and the value is the message as a string.
-// Note we have both ID and IN for indonesian
-config.twitter.invite_text = {
-	'in' : 'Invite/Verification Tweet Text [IN]',
-	'id' : 'Invite/Verification Tweet Text [ID]',
-	'en' : 'Invite/Verification Tweet Text [EN]'
-};
-config.twitter.askforgeo_text = {
-	'in' : 'Location-enabled reminder Tweet Text [IN]',
-	'id' : 'Location-enabled reminder Tweet Text [ID]',
-	'en' : 'Location-enabled reminder Tweet Text [EN]'
-};
-config.twitter.thanks_text = {
-	'in' : 'Thank-you Tweet Text [IN]',
-	'id' : 'Thank-you Tweet Text [ID]',
-	'en' : 'Thank-you Tweet Text [EN]'
-};
-// Append a timestamp to each sent tweet except response to confirmed reports with unique urls
-config.twitter.addTimestamp = true;
 
 // Postgres database connection
 config.pg = {};

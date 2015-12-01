@@ -12,7 +12,6 @@ Master module for collecting reports for the [CogniCity framework](http://cognic
 
 #### Node Modules
 * [Node-Postgres](https://github.com/brianc/node-postgres) version 3.0.0 or compatible
-* [ntwitter](https://github.com/AvianFlu/ntwitter) version 0.5.0 or compatible
 * [winston](https://github.com/flatiron/winston) version 0.8.1 or compatible
 
 #### Dev Modules
@@ -103,30 +102,6 @@ App configuration parameters are stored in a configuration file which is parsed 
 * maxFiles - number of log files to retain
 * logDirectory - Specify a full path to the log directory. If not specified, the application directory will be used.
 
-#### Twitter account configuration
-Set the app authentication parameters as provided by Twitter. See the [ntwitter-module](https://github.com/AvianFlu/ntwitter) documentation for more details.
-* usernameReplyBlacklist - Twitter usernames (without @, comma separated for multiples) which will never be sent to in response to tweet processing
-
-#### Twitter send parameters
-* send_enabled [true | false] - set to true to enable confirmation request tweets to be sent.
-* addTimestamp [true | false] - if true, append a timestamp to each sent tweet.
-
-#### Twitter message text
-The messages are stored in objects, where the object name is the name of the message.
-Within the object, the property name (key) is the language, and the value is the message text.
-There is also a top-level 'defaultLanguage' property which is used if the language code from the tweet cannot be resolved.
-
-##### Languages
-* in - Bahasa Indonesian (language code from Gnip)
-* id - Bahasa Indonesian (language code from Twitter)
-* en - English
-
-##### Messages
-Messages can be at most 109 characters long if addTimestamp is enabled, or 123 characters long if addTimestamp is disabled.
-* invite_text - Text for confirmation request tweets
-* askforgeo_text - Text for geolocation reminders
-* thanks_text - Thank-you message for confirmed tweet
-
 #### Postgres connection
 * conString - PostgreSQL connection details string (see node-postgres module documenation)[https://github.com/brianc/node-postgres]
 * postgres tables as defined in database schema
@@ -173,7 +148,6 @@ To run the full set of tests, run:
 ```shell
 npm test
 ```
-
 
 This will run the following tests:
 
