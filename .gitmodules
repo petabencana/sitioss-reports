@@ -10,3 +10,6 @@
 [submodule "qlue"]
 	path = qlue
 	url = git@github.com:smart-facility/cognicity-reports-qlue.git
+[submodule "floodgauge"]
+	path = floodgauge
+	url = git@github.com:smart-facility/cognicity-reports-floodgauge.git
