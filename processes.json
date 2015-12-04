@@ -1,7 +1,7 @@
 [{
   "script"  : "app.js",
-  "name"    : "cogncity-reports",
-  "watch"   : true,
+  "name"    : "cognicity-reports",
+  "watch"   : false,
   "ignore_watch" : ["[\\/\\\\]\\./", "node_modules", "git-hooks", "test", "^.*\.log$"],
   "args"    : ["sample-reports-config.js"]
 }]
