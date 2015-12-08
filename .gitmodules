@@ -1,0 +1,15 @@
+[submodule "gnip-powertrack"]
+	path = gnip-powertrack
+	url = https://github.com/smart-facility/cognicity-reports-powertrack.git
+[submodule "twitter"]
+	path = twitter
+	url = https://github.com/smart-facility/cognicity-reports-twitter.git
+[submodule "detik"]
+	path = detik
+	url = https://github.com/smart-facility/cognicity-reports-detik.git
+[submodule "qlue"]
+	path = qlue
+	url = https://github.com/smart-facility/cognicity-reports-qlue.git
+[submodule "floodgauge"]
+	path = floodgauge
+	url = https://github.com/smart-facility/cognicity-reports-floodgauge.git
