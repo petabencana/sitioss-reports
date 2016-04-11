@@ -112,7 +112,12 @@ App configuration parameters are stored in a configuration file which is parsed 
 * see the [cognicity-schema](https://github.com/smart-facility/cognicity-schema) project for schema files
 
 ### Run
-The app can be run as a background process using the [pm2 process manager](https://github.com/Unitech/pm2).
+During development, the app can be run using node like so:
+```shell
+node app.js config.js
+```
+
+For deployment, the app can be run as a background process using the [pm2 process manager](https://github.com/Unitech/pm2).
 
 To install pm2, run:
 ```shell

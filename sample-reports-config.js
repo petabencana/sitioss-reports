@@ -14,14 +14,6 @@
  * @property {string} logger.filename Name of log file
  * @property {object} pg Configuration object for PostGres interface
  * @property {string} pg.conString PostGres connection string
- * @property {string} pg.table_all_reports Database table for reports from all sources
- * @property {string} pg.table_tweets Database table name for tweets
- * @property {string} pg.table_users Database table name for user information
- * @property {string} pg.table_invitees Database table name for users who have been tweeted
- * @property {string} pg.table_unconfirmed Database table name for unconfirmed reports
- * @property {string} pg.table_nonspatial_users Database table name for users who have had a non-spatial report received
- * @property {string} pg.table_nonspatial_tweet_reports Database table name for nonspatial tweets
- * @property {string} pg.table_all_users Database table name for user hashes
  * @property {number} pg.reconnectionDelay Delay before attempting a reconnection in ms
  * @property {number} pg.reconnectionAttempts Number of times to attempt reconnection before notifying admin and exiting
  */
