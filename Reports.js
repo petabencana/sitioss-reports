@@ -1,5 +1,8 @@
 'use strict';
 
+// RSVP promises module
+var RSVP = require('rsvp');
+
 /**
  * The Cognicity Reports data collection application.
  * Uses data source plugins to retrieve data from external sources and store in the Cognicity Server
@@ -8,16 +11,19 @@
  * @param {config} config Configuration object
  * @param {object} pg Configured instance of pg object from pg module
  * @param {object} logger Configured instance of logger object from Winston module
+ * @param {function} exitWithStatus Function to exit the process with the status code
  */
 var Reports = function(
 	config,
 	pg,
-	logger
+	logger,
+	exitWithStatus
 	){
 
 	this.config = config;
 	this.pg = pg;
 	this.logger = logger;
+	this.exitWithStatus = exitWithStatus;
 };
 
 Reports.prototype = {
@@ -40,6 +46,12 @@ Reports.prototype = {
 	 */
 	logger: null,
 
+	/**
+	 * Function to exit the process with the supplied status code
+	 * @type {function}
+	 */
+	exitWithStatus: null,
+	
 	/**
 	 * The data sources used to retrieve data from external sources.
 	 * @type {Array}
@@ -93,8 +105,22 @@ Reports.prototype = {
 	 * Exit with error if not.
 	 */
 	validateConfig: function() {
-		// TODO check areTweetMessageLengthsOk
-		// TODO validate config on data sources?
+		var self = this;
+		
+		// Fetch any validation promises from the data sources
+		var validationPromises = [];
+		self._dataSources.forEach( function(dataSource) {
+			if (dataSource.validateConfig) {
+				validationPromises.push( dataSource.validateConfig() );
+			}
+		});
+		
+		// Execute all validation promises and check for any errors
+		RSVP.all( validationPromises )
+			.catch(function(err) {
+				self.logger.error("validateConfig: Error, " + err);
+				self.exitWithStatus(1);
+			});
 	},
 	
 	/**
