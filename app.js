@@ -14,6 +14,8 @@
 
 // Node dependencies
 var path = require('path');
+// Node.js fs filesystem module
+var fs = require('fs');
 
 // Modules
 
@@ -31,6 +33,13 @@ if (process.argv[2]) {
 
 // Logging configuration
 var logPath = ( config.logger.logDirectory ? config.logger.logDirectory : __dirname );
+// Check that log file directory can be written to
+try {
+	fs.accessSync(logPath, fs.W_OK);
+} catch (e) {
+	console.log( "Log directory '" + logPath + "' cannot be written to"  );
+	throw e;
+}
 logPath += path.sep;
 logPath += config.logger.filename + ".log";
 
