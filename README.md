@@ -1,7 +1,7 @@
 # cognicity-reports
 Master module for collecting reports for the [CogniCity framework](http://cognicity.info/cognicity/)
 
-[![Build Status](https://travis-ci.org/smart-facility/cognicity-reports.svg?branch=2.0.x)](https://travis-ci.org/smart-facility/cognicity-reports)
+[![Build Status](https://travis-ci.org/smart-facility/cognicity-reports.svg?branch=master)](https://travis-ci.org/smart-facility/cognicity-reports)
 
 ### API Documentation
 [http://cognicity.info/cognicity/api-docs/cognicity-reports/index.html](http://cognicity.info/cognicity/api-docs/cognicity-reports/index.html)
