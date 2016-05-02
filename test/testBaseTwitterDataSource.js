@@ -13,20 +13,20 @@ var reports = {
 
 // Create server with empty objects
 // We will mock these objects as required for each test suite
-var BaseTwitterDataSource = new BaseTwitterDataSource(
+var baseTwitterDataSource = new BaseTwitterDataSource(
 	reports,
 	{}
 );
 
 // Mocked logger we can use to let code run without error when trying to call logger messages
-BaseTwitterDataSource.logger = {
+baseTwitterDataSource.logger = {
 	error:function(){},
 	warn:function(){},
 	info:function(){},
 	verbose:function(){},
 	debug:function(){}
 };
-BaseTwitterDataSource.reports.logger = BaseTwitterDataSource.logger;
+baseTwitterDataSource.reports.logger = baseTwitterDataSource.logger;
 
 // Test harness for CognicityReportsPowertrack object
 describe( 'BaseTwitterDataSource', function() {
@@ -44,18 +44,18 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		beforeEach( function() {
-			BaseTwitterDataSource.config = {
+			baseTwitterDataSource.config = {
 				twitter: {}
 			};
 		});
 
 		it( 'Non-object properties are not tested', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				singleProperty : createString(200)
 			};
 
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		// pass
 		    	})
@@ -66,14 +66,14 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Single short message is ok', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				messageObject : {
 					'en' : createString(1)
 				}
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		// pass
 		    	})
@@ -84,14 +84,14 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Single long message is not ok', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				messageObject : {
 					'en' : createString(124)
 				}
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		test.fail(value);
 		    	})
@@ -102,7 +102,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Message over timestamp boundary is ok when timestamp is off', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				messageObject : {
 					'en' : createString(120)
 				},
@@ -110,7 +110,7 @@ describe( 'BaseTwitterDataSource', function() {
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		// pass
 		    	})
@@ -121,7 +121,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Message over timestamp boundary is not ok when timestamp is on', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				messageObject : {
 					'en' : createString(120)
 				},
@@ -129,7 +129,7 @@ describe( 'BaseTwitterDataSource', function() {
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		test.fail(value);
 		    	})
@@ -140,7 +140,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Multiple short messages are ok', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				messageObject1 : {
 					'en' : createString(100),
 					'fr' : createString(100)
@@ -152,7 +152,7 @@ describe( 'BaseTwitterDataSource', function() {
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		// pass
 		    	})
@@ -163,7 +163,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Long message and multiple short messages are not ok', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				messageObject1 : {
 					'en' : createString(100),
 					'fr' : createString(100)
@@ -175,7 +175,7 @@ describe( 'BaseTwitterDataSource', function() {
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		test.fail(value);
 		    	})
@@ -186,7 +186,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Message with one URL passes when under size limit', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				url_length: 1,
 				messageObject1 : {
 					'en' : createString(121) + " http://example.com"
@@ -194,7 +194,7 @@ describe( 'BaseTwitterDataSource', function() {
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		// pass
 		    	})
@@ -205,7 +205,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Message with one URL fails when over size limit', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				url_length: 2,
 				messageObject1 : {
 					'en' : createString(121) + " http://example.com"
@@ -213,7 +213,7 @@ describe( 'BaseTwitterDataSource', function() {
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		test.fail(value);
 		    	})
@@ -225,7 +225,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Message with two URLs passes when under size limit', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				url_length: 1,
 				messageObject1 : {
 					'en' : createString(119) + " http://example" + " https://example.com.au/foo/bar.html?a=1&b=2"
@@ -233,7 +233,7 @@ describe( 'BaseTwitterDataSource', function() {
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		// pass
 		    	})
@@ -244,7 +244,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( 'Message with two URLs fails when over size limit', function() {
-			BaseTwitterDataSource.config.twitter = {
+			baseTwitterDataSource.config.twitter = {
 				url_length: 2,
 				messageObject1 : {
 					'en' : createString(119) + " http://example" + " https://example.com.au/foo/bar.html?a=1&b=2"
@@ -252,7 +252,7 @@ describe( 'BaseTwitterDataSource', function() {
 			};
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._areTweetMessageLengthsOk() )
+		    	.given( baseTwitterDataSource._areTweetMessageLengthsOk() )
 		    	.then(function(value) {
 		    		test.fail(value);
 		    	})
@@ -264,7 +264,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		after( function(){
-			BaseTwitterDataSource.config = {};
+			baseTwitterDataSource.config = {};
 		});
 	});
 	
@@ -273,8 +273,8 @@ describe( 'BaseTwitterDataSource', function() {
 		var failVerify;
 		
 		before( function() {
-			oldTwitter = BaseTwitterDataSource.twitter;
-			BaseTwitterDataSource.twitter = {
+			oldTwitter = baseTwitterDataSource.twitter;
+			baseTwitterDataSource.twitter = {
 				verifyCredentials: function(callback) {
 					if (failVerify) callback(true, null);
 					else callback(null, []);
@@ -288,7 +288,7 @@ describe( 'BaseTwitterDataSource', function() {
 
 		it( 'VerifyCredentials success resolves promise', function() {			
 		    test.promise
-		    	.given( BaseTwitterDataSource._verifyTwitterCredentials() )
+		    	.given( baseTwitterDataSource._verifyTwitterCredentials() )
 		    	.then(function(value) {
 		    		// success case expected
 		    	})
@@ -302,7 +302,7 @@ describe( 'BaseTwitterDataSource', function() {
 			failVerify = true;
 			
 		    test.promise
-		    	.given( BaseTwitterDataSource._verifyTwitterCredentials() )
+		    	.given( baseTwitterDataSource._verifyTwitterCredentials() )
 		    	.then(function(value) {
 		    		test.fail(value);
 		    	})
@@ -313,7 +313,112 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		after( function(){
-			BaseTwitterDataSource.twitter = oldTwitter;
+			baseTwitterDataSource.twitter = oldTwitter;
+		});
+	});
+	
+	describe( "sendReplyTweet", function() {
+		var successCallbackRan;
+		var updateStatusRan;
+		var updateStatusParams;
+		var updateStatusMessage;
+		var tweetId = "5377776775";
+
+		function createTweetActivity(username) {
+			return {
+				id : 'tag:search.twitter.com,2005:'+tweetId,
+				actor: {
+					preferredUsername: username
+				}
+			};
+		}
+		function success(){
+			successCallbackRan = true;
+		}
+		var message = 'pan galactic gargle blaster';
+
+		before( function() {
+			baseTwitterDataSource.twitter = {
+				updateStatus: function(message,params,callback) {
+					updateStatusMessage = message;
+					updateStatusRan = true;
+					updateStatusParams = params;
+					callback( baseTwitterDataSource.twitter.tweetSendWillError, {} );
+				}
+			};
+		});
+
+		beforeEach( function() {
+			baseTwitterDataSource.twitter.tweetSendWillError = false;
+			successCallbackRan = false;
+			updateStatusRan = false;
+			updateStatusParams = {};
+			updateStatusMessage = null;
+			baseTwitterDataSource.config = {
+				twitter: {
+					usernameReplyBlacklist : 'zaphod, ford,arthur',
+					send_enabled: true,
+					addTimestamp: false
+				}
+			};
+		});
+
+		it( "sendReplyTweet calls updateStatus and executes callback", function() {
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( successCallbackRan ).is( true );
+			test.value( updateStatusRan ).is( true );
+		});
+
+
+		it( "Tweet not sent to usernames in usernameReplyBlacklist", function() {
+			baseTwitterDataSource._baseSendReplyTweet( 'zaphod', tweetId, message, success );
+			test.value( successCallbackRan ).is( false );
+
+			baseTwitterDataSource._baseSendReplyTweet( 'ford', tweetId, message, success );
+			test.value( successCallbackRan ).is( false );
+
+			baseTwitterDataSource._baseSendReplyTweet( 'arthur', tweetId, message, success );
+			test.value( successCallbackRan ).is( false );
+		});
+
+		it( 'Tweet not sent if send_enabled is false', function() {
+			baseTwitterDataSource.config.twitter.send_enabled = false;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( updateStatusRan ).is( false );
+		});
+
+		it( 'Callback executed if send_enabled is false', function() {
+			baseTwitterDataSource.config.twitter.send_enabled = false;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( successCallbackRan ).is( true );
+		});
+
+		it( 'Callback not executed if error tweeting occurs', function() {
+			baseTwitterDataSource.twitter.tweetSendWillError = true;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( successCallbackRan ).is( false );
+		});
+
+		it( 'Tweet is reply to ID from tweetActivity', function() {
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( updateStatusParams.in_reply_to_status_id ).is( tweetId );
+		});
+
+		it( 'Timestamp is added to tweet', function() {
+			baseTwitterDataSource.config.twitter.addTimestamp = false;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.string( updateStatusMessage ).contains( message );
+			test.string( updateStatusMessage ).notMatch( / [0-9]*$/ );
+			
+			baseTwitterDataSource.config.twitter.addTimestamp = true;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.string( updateStatusMessage ).contains( message );
+			test.string( updateStatusMessage ).match( / [0-9]*$/ );
+		});
+		
+		after( function(){
+			baseTwitterDataSource.twitter = {};
+			baseTwitterDataSource.config = {};
 		});
 	});
 	

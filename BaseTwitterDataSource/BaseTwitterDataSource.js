@@ -138,6 +138,52 @@ BaseTwitterDataSource.prototype = {
 	},
 	
 	/**
+	 * Send @reply Twitter message
+	 * @param {string} username Twitter username of user to send reply to
+	 * @param {string} tweetId ID of tweet to send reply to
+	 * @param {string} message The tweet text to send
+	 * @param {function} success Callback function called on success
+	 */
+	_baseSendReplyTweet: function(username, tweetId, message, success) {
+		var self = this;
+
+		var usernameInBlacklist = false;
+		if (self.config.twitter.usernameReplyBlacklist) {
+			self.config.twitter.usernameReplyBlacklist.split(",").forEach( function(blacklistUsername){
+				if ( username === blacklistUsername.trim() ) usernameInBlacklist = true;
+			});
+		}
+
+		if ( usernameInBlacklist ) {
+			// Never send tweets to usernames in blacklist
+			self.logger.info( '_sendReplyTweet: Tweet user is in usernameReplyBlacklist, not sending' );
+		} else {
+			// Tweet is not to ourself, attempt to send
+			var params = {
+				in_reply_to_status_id: tweetId
+			};
+
+			message = '@' + username + ' ' + message;
+			if ( self.config.twitter.addTimestamp ) message = message + " " + new Date().getTime();
+
+			if (self.config.twitter.send_enabled === true){
+				self.twitter.updateStatus(message, params, function(err, data){
+					if (err) {
+						self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + err );
+					} else {
+						self.logger.debug( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
+						if (success) success();
+					}
+				});
+			} else { // for testing
+				self.logger.info( '_sendReplyTweet: In test mode - no message will be sent. Callback will still run.' );
+				self.logger.info( '_sendReplyTweet: Would have tweeted: "' + message + '" with params ' + JSON.stringify(params) );
+				if (success) success();
+			}
+		}
+	},
+	
+	/**
 	 * Stop realtime processing of tweets and start caching tweets until caching mode is disabled.
 	 */
 	enableCacheMode: function() {
