@@ -184,6 +184,24 @@ BaseTwitterDataSource.prototype = {
 	},
 	
 	/**
+	 * Insert an invitee - i.e. a user we've invited to participate.
+	 * @param {string} username Twitter username to log as invited user
+	 */
+	_baseInsertInvitee: function(username) {
+		var self = this;
+
+		self.reports.dbQuery(
+			{
+				text : "INSERT INTO " + self.config.pg.table_invitees + " (user_hash) VALUES (md5($1));",
+				values : [ username ]
+			},
+			function(result) {
+				self.logger.info('Logged new invitee - @' + username);
+			}
+		);
+	},
+	
+	/**
 	 * Stop realtime processing of tweets and start caching tweets until caching mode is disabled.
 	 */
 	enableCacheMode: function() {
