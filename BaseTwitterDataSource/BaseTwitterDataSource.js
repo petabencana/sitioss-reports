@@ -323,6 +323,77 @@ BaseTwitterDataSource.prototype = {
 	},
 	
 	/**
+	 * Insert a confirmed report - i.e. has geo coordinates and is addressed.
+	 * Store both the tweet information and the user hash.
+	 * TODO
+	 */
+	_baseInsertConfirmed: function(username, langs, tweetId, createdAt, text, hashtags, textUrls, userMentions, lang, url, theGeom) {
+		var self = this;
+
+		//insertUser with count -> upsert
+		self.reports.dbQuery(
+			{
+				text : "INSERT INTO " + self.config.pg.table_tweets + " " +
+					"(created_at, text, hashtags, text_urls, user_mentions, lang, url, tweet_id, the_geom) " +
+					"VALUES (" +
+					"$1, " +
+					"$2, " +
+					"$3, " +
+					"$4, " +
+					"$5, " +
+					"$6, " +
+					"$7, " +
+					"$8, " +
+					"ST_GeomFromText('POINT(' || $9 || ')',4326)" +
+					") RETURNING pkey;",
+				values : [
+				    createdAt,
+				    text,
+				    hashtags,
+				    textUrls,
+				    userMentions,
+				    lang,
+					url,
+					tweetId,
+				    theGeom
+				]
+			},
+			function(result) {
+				var report_id_foreign_key = result.rows[0].pkey; // primary key for tweet reports = foreign key for all_reports table
+				self.logger.info('Logged confirmed tweet report');
+				self.reports.dbQuery(
+					{
+						text : "SELECT upsert_tweet_users(md5($1));",
+						values : [
+						    username
+						]
+					},
+					function(result) {
+						self.logger.info('Logged confirmed tweet user');
+						self.reports.dbQuery(
+							{
+								text: "SELECT pkey FROM "+self.config.pg.table_all_reports+" WHERE fkey = $1 AND source = 'twitter';",
+								values : [
+									report_id_foreign_key
+								]
+							},
+							function(result) {
+								self.logger.info('Logged confirmed tweet user');
+								// Get correct response message
+								var message = self._getMessage('thanks_text', langs);
+								// Append ID of user's report
+								message += result.rows[0].pkey;
+								// Send the user a thank-you tweet; send this for every confirmed report, timestamp not needed because of unique url
+								self._baseSendReplyTweet( username, tweetId, message );
+							}
+						);
+					}
+				);
+			}
+		);
+	},
+	
+	/**
 	 * Stop realtime processing of tweets and start caching tweets until caching mode is disabled.
 	 */
 	enableCacheMode: function() {
