@@ -202,6 +202,33 @@ BaseTwitterDataSource.prototype = {
 	},
 	
 	/**
+	 * Insert an unconfirmed report - i.e. has geo coordinates but is not addressed.
+	 * @param {string} createdAt ISO8601 timestamp tweet was created at
+	 * @param {string} coordinates TODO
+	 */
+	_baseInsertUnConfirmed: function(createdAt, coordinates) {
+		var self = this;
+
+		self.reports.dbQuery(
+			{
+				text : "INSERT INTO " + self.config.pg.table_unconfirmed + " " +
+					"(created_at, the_geom) " +
+					"VALUES ( " +
+					"$1, " +
+					"ST_GeomFromText('POINT(' || $2 || ')',4326)" +
+					");",
+				values : [
+				    createdAt,
+				    coordinates
+				]
+			},
+			function(result) {
+				self.logger.info('Logged unconfirmed tweet report');
+			}
+		);
+	},
+	
+	/**
 	 * Stop realtime processing of tweets and start caching tweets until caching mode is disabled.
 	 */
 	enableCacheMode: function() {
