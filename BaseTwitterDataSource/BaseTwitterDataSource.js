@@ -229,6 +229,30 @@ BaseTwitterDataSource.prototype = {
 	},
 	
 	/**
+	 * Resolve message code from config.twitter using passed language codes.
+	 * Will fall back to trying to resolve message using default language set in configuration.
+	 * @param {string} code Message code to lookup in config.twitter
+	 * @param {Array} langs Array of language codes to try and resolve in order of preference
+	 * @returns {?string} Message text, or null if not resolved.
+	 */
+	_baseGetMessage: function(code, langs) {
+		var self = this;
+
+		// Find a matching code if we can
+		if (self.config.twitter[code]) {
+			for (var i=0; i<langs.length; i++) {
+				var lang = langs[i];
+				if (self.config.twitter[code][lang]) return self.config.twitter[code][lang];
+			}
+			// If we haven't found a code, try the default language
+			if (self.config.twitter[code][self.config.twitter.defaultLanguage]) return self.config.twitter[code][self.config.twitter.defaultLanguage];
+		}
+
+		self.logger.warn( "_getMessage: Code could not be resolved for '" + code + "' and langs '" + langs +"'" );
+		return null;
+	},
+	
+	/**
 	 * Stop realtime processing of tweets and start caching tweets until caching mode is disabled.
 	 */
 	enableCacheMode: function() {
