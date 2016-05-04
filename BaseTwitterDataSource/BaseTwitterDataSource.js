@@ -53,6 +53,29 @@ BaseTwitterDataSource.prototype = {
 	_cachedData: [],
 	
 	/**
+	 * Only execute the success callback if the user is not currently in the all users table.
+	 * @param {string} user The twitter screen name to check if exists
+	 * @param {DbQuerySuccess} callback Callback to execute if the user doesn't exist
+	 */
+	_ifNewUser: function(user, success) {
+		var self = this;
+
+		self.reports.dbQuery(
+			{
+				text: "SELECT user_hash FROM " + self.config.pg.table_all_users + " WHERE user_hash = md5($1);",
+				values: [ user ]
+			},
+			function(result) {
+				if (result && result.rows && result.rows.length === 0) {
+					success(result);
+				} else {
+					self.logger.debug("Not performing callback as user already exists");
+				}
+			}
+		);
+	},
+	
+	/**
 	 * Validate the data source configuration.
 	 * Check twitter credentials and tweet message lengths.
 	 * @return {Promise} Validation promise, throws an error on any validation error
@@ -250,6 +273,53 @@ BaseTwitterDataSource.prototype = {
 
 		self.logger.warn( "_getMessage: Code could not be resolved for '" + code + "' and langs '" + langs +"'" );
 		return null;
+	},
+	
+	/**
+	 * Insert a non-spatial tweet report - i.e. we got an addressed tweet without geo coordinates.
+	 * @param {GnipTweetActivity} tweetActivity Gnip PowerTrack tweet activity object
+	 */
+	_baseInsertNonSpatial: function(username, createdAt, text, hashtags, urls, userMentions, lang) {
+		var self = this;
+
+		self.reports.dbQuery(
+			{
+				text : "INSERT INTO " + self.config.pg.table_nonspatial_tweet_reports + " " +
+					"(created_at, text, hashtags, urls, user_mentions, lang) " +
+					"VALUES (" +
+					"$1, " +
+					"$2, " +
+					"$3, " +
+					"$4, " +
+					"$5, " +
+					"$6" +
+					");",
+				values : [
+					createdAt,
+					text,
+					hashtags,
+					urls,
+					userMentions,
+					lang
+				]
+			},
+
+			function(result) {
+				self.logger.info('Inserted non-spatial tweet');
+				
+				self._ifNewUser( username, function(result) {
+					self.reports.dbQuery(
+						{
+							text : "INSERT INTO " + self.config.pg.table_nonspatial_users + " (user_hash) VALUES (md5($1));",
+							values : [ username ]
+						},
+						function(result) {
+							self.logger.info("Inserted non-spatial user");
+						}
+					);
+				});
+			}
+		);
 	},
 	
 	/**
