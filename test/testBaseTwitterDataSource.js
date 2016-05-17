@@ -31,6 +31,42 @@ baseTwitterDataSource.reports.logger = baseTwitterDataSource.logger;
 // Test harness for CognicityReportsPowertrack object
 describe( 'BaseTwitterDataSource', function() {
 	
+	// Test suite for i18n getMessage function
+	describe( '_getMessage', function() {
+		// Setup by adding some codes and a defaultLanguage to the config
+		before( function() {
+			baseTwitterDataSource.config = {
+				'twitter' : {
+					'greeting' : {
+						'human' : 'hi',
+						'monkey' : 'eek'
+					},
+					'defaultLanguage' : 'human'
+				}
+			};
+		});
+
+		it( 'Should resolve a string for first language code', function() {
+			test.string( baseTwitterDataSource._baseGetMessage( 'greeting', ['human'] ) ).is( 'hi' );
+		});
+		it( 'Should resolve a string for second language code', function() {
+			test.string( baseTwitterDataSource._baseGetMessage( 'greeting', [null,'monkey'] ) ).is( 'eek' );
+		});
+		it( 'Should resolve twitter code if both codes present', function() {
+			test.string( baseTwitterDataSource._baseGetMessage( 'greeting', ['monkey','human'] ) ).is( 'eek' );
+		});
+		it( 'Should resolve a string for default language', function() {
+			test.string( baseTwitterDataSource._baseGetMessage( 'greeting', ['cat'] ) ).is( 'hi' );
+		});
+		it( 'Should return null if code cannot be resolved', function() {
+			test.value( baseTwitterDataSource._baseGetMessage( 'farewell', ['human'] ) ).is( null );
+		});
+		
+		after( function() {
+			baseTwitterDataSource.config = {};
+		});
+	});
+	
 	describe( "areTweetMessageLengthsOk", function() {
 		function createString(length) {
 			var s = "";
