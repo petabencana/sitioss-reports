@@ -394,6 +394,41 @@ BaseTwitterDataSource.prototype = {
 	},
 	
 	/**
+	 * Update a report status to verified if a matching tweet_id is found in the tweet_reports table
+	 * @param {integer} retweet_id The retweeted twitter ID which may be a confirmed report
+	 */
+	_processVerifiedReport: function(retweet_id) {
+		var self = this;
+		
+		// Check to see if the referenced report is confirmed
+		self.reports.dbQuery(
+			{
+				text: "SELECT pkey FROM " + self.config.pg.table_tweets + " WHERE tweet_id = $1;",
+				values : [retweet_id]
+			},
+			// Update status
+			function(result) {
+				if (result && result.rows && result.rows.length === 1 && result.rows[0]) {
+					self.reports.dbQuery(
+						{
+							text : "UPDATE " + self.config.pg.table_all_reports + " " +
+								"SET STATUS = 'verified' WHERE fkey = $1 AND source = 'twitter';",
+							values : [
+								result.rows[0].pkey
+							]
+						},
+						function(result) {
+							self.logger.info('Logged verified tweet report');
+						}
+					);
+				} else {
+					self.logger.debug("Not performing callback as tweet not found in database");
+				}
+			}
+		);
+	},
+	
+	/**
 	 * Stop realtime processing of tweets and start caching tweets until caching mode is disabled.
 	 */
 	enableCacheMode: function() {
