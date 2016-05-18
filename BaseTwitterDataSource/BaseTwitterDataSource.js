@@ -227,7 +227,7 @@ BaseTwitterDataSource.prototype = {
 	/**
 	 * Insert an unconfirmed report - i.e. has geo coordinates but is not addressed.
 	 * @param {string} createdAt ISO8601 timestamp tweet was created at
-	 * @param {string} coordinates TODO
+	 * @param {string} coordinates Geo coordinates in WKT format (long lat)
 	 */
 	_baseInsertUnConfirmed: function(createdAt, coordinates) {
 		var self = this;
@@ -325,7 +325,17 @@ BaseTwitterDataSource.prototype = {
 	/**
 	 * Insert a confirmed report - i.e. has geo coordinates and is addressed.
 	 * Store both the tweet information and the user hash.
-	 * TODO
+	 * @param {string} username Username of sender of the tweet
+	 * @param {array} langs Array of languages describing tweet 
+	 * @param {string} tweetId ID of tweet
+	 * @param {string} createdAt Date tweet created in ISO8601 format
+	 * @param {string} text Body text of tweet
+	 * @param {string} hashtags Hashtags used in tweet as JSON
+	 * @param {string} textUrls URLs used in tweet as JSON
+	 * @param {string} userMentions Users mentioned in tweet as JSON
+	 * @param {string} lang Primary language of the tweet
+	 * @param {string} url Link to the tweet
+	 * @param {string} theGeom Geo coordiantes in WKT format (long, lat)
 	 */
 	_baseInsertConfirmed: function(username, langs, tweetId, createdAt, text, hashtags, textUrls, userMentions, lang, url, theGeom) {
 		var self = this;

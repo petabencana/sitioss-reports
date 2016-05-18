@@ -32,7 +32,7 @@ baseTwitterDataSource.reports.logger = baseTwitterDataSource.logger;
 describe( 'BaseTwitterDataSource', function() {
 	
 	// Test suite for i18n getMessage function
-	describe( '_getMessage', function() {
+	describe( '_baseGetMessage', function() {
 		// Setup by adding some codes and a defaultLanguage to the config
 		before( function() {
 			baseTwitterDataSource.config = {
@@ -67,7 +67,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 	});
 	
-	describe( "areTweetMessageLengthsOk", function() {
+	describe( "_baseAreTweetMessageLengthsOk", function() {
 		function createString(length) {
 			var s = "";
 			for (var i = 0; i<length; i++) {
@@ -304,7 +304,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 	});
 	
-	describe( "_verifyTwitterCredentials", function() {
+	describe( "_baseVerifyTwitterCredentials", function() {
 		var oldTwitter;
 		var failVerify;
 		
@@ -353,7 +353,7 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 	});
 	
-	describe( "sendReplyTweet", function() {
+	describe( "_baseSendReplyTweet", function() {
 		var successCallbackRan;
 		var updateStatusRan;
 		var updateStatusParams;
