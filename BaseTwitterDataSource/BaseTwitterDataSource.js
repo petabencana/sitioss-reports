@@ -277,7 +277,13 @@ BaseTwitterDataSource.prototype = {
 	
 	/**
 	 * Insert a non-spatial tweet report - i.e. we got an addressed tweet without geo coordinates.
-	 * @param {GnipTweetActivity} tweetActivity Gnip PowerTrack tweet activity object
+	 * @param {string} username Username of sender of the tweet
+	 * @param {string} createdAt Date tweet created in ISO8601 format
+	 * @param {string} text Body text of tweet
+	 * @param {string} hashtags Hashtags used in tweet as JSON
+	 * @param {string} urls URLs used in tweet as JSON
+	 * @param {string} userMentions Users mentioned in tweet as JSON
+	 * @param {string} lang Primary language of the tweet
 	 */
 	_baseInsertNonSpatial: function(username, createdAt, text, hashtags, urls, userMentions, lang) {
 		var self = this;
