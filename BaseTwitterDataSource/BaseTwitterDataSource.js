@@ -53,6 +53,12 @@ BaseTwitterDataSource.prototype = {
 	_cachedData: [],
 	
 	/**
+	 * If twitter sending is rate limited, this is the time we can begin sending again.
+	 * @type {number}
+	 */
+	_rateLimitedUntil: 0,
+	
+	/**
 	 * Only execute the success callback if the user is not currently in the all users table.
 	 * @param {string} user The twitter screen name to check if exists
 	 * @param {DbQuerySuccess} callback Callback to execute if the user doesn't exist
@@ -190,14 +196,35 @@ BaseTwitterDataSource.prototype = {
 			if ( self.config.twitter.addTimestamp ) message = message + " " + new Date().getTime();
 
 			if (self.config.twitter.send_enabled === true){
-				self.twitter.updateStatus(message, params, function(err, data){
-					if (err) {
-						self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + err );
-					} else {
-						self.logger.debug( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
-						if (success) success();
-					}
-				});
+
+				if ( new Date().getTime() > self._rateLimitedUntil ) {
+					self.twitter.updateStatus(message, params, function(err, data){
+						if (err) {
+							self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + err );
+							
+							if ( err.statusCode === 403 ) {
+								// Over send quota; fetch wait time until sending re-enabled and pause sending until then
+								
+								// If we got a 403 it means we may have been rate limited.
+								// Wait 30 minutes before we start sending again.
+								// Ref: https://support.twitter.com/articles/15364
+								// Ref: https://dev.twitter.com/rest/reference/post/statuses/update
+								// Note that if we post the same status twice we also get a 403 and would then rate limit, so this MUST be avoided
+								self._rateLimitedUntil = new Date().getTime() + (30 * 60 * 1000);
+								self.logger.warn( "_baseSendReplyTweet: Rate limiting, received 403 status" );
+							}
+						} else {
+							self.logger.debug( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
+							if (success) success();
+						}
+					});
+					
+				} else {
+					// Don't send anything if we're rate limited
+					// FIXME - Should we cache these? What if we never catch up?
+					self.logger.warn( "_baseSendReplyTweet: Rate limited, not sending '"+message+"'" );
+				}
+				
 			} else { // for testing
 				self.logger.info( '_sendReplyTweet: In test mode - no message will be sent. Callback will still run.' );
 				self.logger.info( '_sendReplyTweet: Would have tweeted: "' + message + '" with params ' + JSON.stringify(params) );

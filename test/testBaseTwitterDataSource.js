@@ -379,17 +379,24 @@ describe( 'BaseTwitterDataSource', function() {
 					updateStatusMessage = message;
 					updateStatusRan = true;
 					updateStatusParams = params;
-					callback( baseTwitterDataSource.twitter.tweetSendWillError, {} );
+					var errorResponse = undefined;
+					if (baseTwitterDataSource.twitter.tweetSendWillError) {
+						errorResponse = {};
+						errorResponse.statusCode = baseTwitterDataSource.twitter.tweetSendErrorStatus;
+					}
+					callback( errorResponse, {} );
 				}
 			};
 		});
 
 		beforeEach( function() {
 			baseTwitterDataSource.twitter.tweetSendWillError = false;
+			baseTwitterDataSource.twitter.tweetSendErrorStatus = 500;
 			successCallbackRan = false;
 			updateStatusRan = false;
 			updateStatusParams = {};
 			updateStatusMessage = null;
+			baseTwitterDataSource._rateLimitedUntil = 0;
 			baseTwitterDataSource.config = {
 				twitter: {
 					usernameReplyBlacklist : 'zaphod, ford,arthur',
@@ -452,9 +459,46 @@ describe( 'BaseTwitterDataSource', function() {
 			test.string( updateStatusMessage ).match( / [0-9]*$/ );
 		});
 		
+		it( 'Rate limiting error stops sending tweets', function() {
+			// Expect updateStatus to run when tweeting
+			baseTwitterDataSource.twitter.tweetSendWillError = true;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( updateStatusRan ).is( true );
+			
+			// Expect update status to run once and get the rate limited 403 error
+			updateStatusRan = false;
+			baseTwitterDataSource.twitter.tweetSendErrorStatus = 403;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( updateStatusRan ).is( true );
+			
+			// Now we are rate limited expect updateStatus not to be called
+			updateStatusRan = false;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( updateStatusRan ).is( false );
+		});
+		
+		it( 'Sending resumes once rate limiting times out', function() {
+			// Expect update status to run once and get the rate limited 403 error
+			baseTwitterDataSource.twitter.tweetSendWillError = true;
+			baseTwitterDataSource.twitter.tweetSendErrorStatus = 403;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( updateStatusRan ).is( true );
+			
+			// Now we are rate limited expect updateStatus not to be called
+			updateStatusRan = false;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( updateStatusRan ).is( false );
+			
+			// Reset the rate limiting timer and expect updateStatus to be called again
+			baseTwitterDataSource._rateLimitedUntil = 0;
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			test.value( updateStatusRan ).is( true );
+		});
+		
 		after( function(){
 			baseTwitterDataSource.twitter = {};
 			baseTwitterDataSource.config = {};
+			baseTwitterDataSource._rateLimitedUntil = 0;
 		});
 	});
 	
