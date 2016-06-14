@@ -3,11 +3,14 @@ Master module for collecting reports for the [CogniCity framework](http://cognic
 
 [![Build Status](https://travis-ci.org/smart-facility/cognicity-reports.svg?branch=master)](https://travis-ci.org/smart-facility/cognicity-reports)
 
+DOI for current stable release [v2.0.0](https://github.com/smart-facility/cognicity-reports/releases/tag/v2.0.0):
+[![DOI](https://zenodo.org/badge/19201/smart-facility/cognicity-reports.svg)](https://zenodo.org/badge/latestdoi/19201/smart-facility/cognicity-reports)
+
 ### API Documentation
 [http://cognicity.info/cognicity/api-docs/cognicity-reports/index.html](http://cognicity.info/cognicity/api-docs/cognicity-reports/index.html)
 
 ### Dependencies
-* [NodeJS](http://nodejs.org) version 0.10.16 or compatible
+* [NodeJS](http://nodejs.org) version 4.2.1 or compatible
 * [PostgreSQL](http://www.postgresql.org) version 9.2 or later, with [PostGIS](http://postgis.org/) version 2.0 or compatible
 
 #### Node Modules
