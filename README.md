@@ -14,15 +14,7 @@ DOI for current stable release [v2.0.0](https://github.com/smart-facility/cognic
 * [PostgreSQL](http://www.postgresql.org) version 9.2 or later, with [PostGIS](http://postgis.org/) version 2.0 or compatible
 
 #### Node Modules
-* [Node-Postgres](https://github.com/brianc/node-postgres) version 3.0.0 or compatible
-* [winston](https://github.com/flatiron/winston) version 0.8.1 or compatible
-
-#### Dev Modules
-* [jshint](https://github.com/jshint/node-jshint) version 2.5.8 or compatible
-* [unit.js](http://unitjs.com/) version 1.0.2 or compatible
-* [mocha](http://mochajs.org/) version 2.0.1 or compatible
-* [jsdoc](https://github.com/jsdoc3/jsdoc) version 3.2.0 or compatible
-* [istanbul](https://github.com/gotwarlost/istanbul) version 0.3.5 or compatible
+* Check package.json for details
 
 If you're going to commit changes to the JavaScript, be sure to run 'npm test' first - and fix any issues that it complains about, otherwise the build will fail when you push the commit.
 
