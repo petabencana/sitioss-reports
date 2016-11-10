@@ -12,7 +12,7 @@
 	url = https://github.com/urbanriskmap/cognicity-reports-qlue.git
 [submodule "floodgauge"]
 	path = floodgauge
-	url = https://github.com/smart-facility/cognicity-reports-floodgauge.git
+	url = https://github.com/urbanriskmap/cognicity-reports-floodgauge.git
 [submodule "cognicity-grasp"]
 	path = cognicity-grasp
 	url = https://github.com/urbanriskmap/cognicity-grasp
