@@ -19,7 +19,7 @@
  */
 var config = {};
 
-config.dataSources = [ 'twitter' ];
+config.dataSources = [ 'detik' ];
 
 // Logging configuration
 config.logger = {};
