@@ -9,7 +9,7 @@
 	url = https://github.com/urbanriskmap/cognicity-reports-detik.git
 [submodule "qlue"]
 	path = qlue
-	url = https://github.com/smart-facility/cognicity-reports-qlue.git
+	url = https://github.com/urbanriskmap/cognicity-reports-qlue.git
 [submodule "floodgauge"]
 	path = floodgauge
 	url = https://github.com/smart-facility/cognicity-reports-floodgauge.git
