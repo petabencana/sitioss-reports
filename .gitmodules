@@ -7,9 +7,6 @@
 [submodule "detik"]
 	path = detik
 	url = https://github.com/urbanriskmap/cognicity-reports-detik.git
-[submodule "qlue"]
-	path = qlue
-	url = https://github.com/urbanriskmap/cognicity-reports-qlue.git
 [submodule "floodgauge"]
 	path = floodgauge
 	url = https://github.com/urbanriskmap/cognicity-reports-floodgauge.git
