@@ -62,7 +62,7 @@ BaseTwitterDataSource.prototype = {
 
 		self.reports.dbQuery(
 			{
-				text: "SELECT user_hash FROM " + self.config.pg.table_all_users + " WHERE user_hash = md5($1);",
+				text: "SELECT user_hash FROM " + self.config.pg.table_invitees + " WHERE user_hash = md5($1);",
 				values: [ user ]
 			},
 			function(result) {
