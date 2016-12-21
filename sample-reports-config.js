@@ -19,7 +19,7 @@
  */
 var config = {};
 
-config.dataSources = [ 'detik' ];
+config.dataSources = [ 'qlue' ];
 
 // Logging configuration
 config.logger = {};

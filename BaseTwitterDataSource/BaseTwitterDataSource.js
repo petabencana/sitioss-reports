@@ -21,7 +21,7 @@ var BaseTwitterDataSource = function BaseTwitterDataSource(
 };
 
 BaseTwitterDataSource.prototype = {
-	
+
 	/**
 	 * Instance of the reports module that the data source uses to interact with Cognicity Server.
 	 * @type {Reports}
@@ -51,7 +51,7 @@ BaseTwitterDataSource.prototype = {
 	 * @type {Array}
 	 */
 	_cachedData: [],
-	
+
 	/**
 	 * Only execute the success callback if the user is not currently in the all users table.
 	 * @param {string} user The twitter screen name to check if exists
@@ -62,7 +62,7 @@ BaseTwitterDataSource.prototype = {
 
 		self.reports.dbQuery(
 			{
-				text: "SELECT user_hash FROM " + self.config.pg.table_all_users + " WHERE user_hash = md5($1);",
+				text: "SELECT user_hash FROM " + self.config.pg.table_invitees + " WHERE user_hash = md5($1);",
 				values: [ user ]
 			},
 			function(result) {
@@ -74,7 +74,7 @@ BaseTwitterDataSource.prototype = {
 			}
 		);
 	},
-	
+
 	/**
 	 * Validate the data source configuration.
 	 * Check twitter credentials and tweet message lengths.
@@ -82,7 +82,7 @@ BaseTwitterDataSource.prototype = {
 	 */
 	validateConfig: function() {
 		var self = this;
-		
+
 		// Contain separate validation promises in one 'all' promise
 		return RSVP.all([
 		    self._verifyTwitterCredentials(),
@@ -110,7 +110,7 @@ BaseTwitterDataSource.prototype = {
 			});
 		});
 	},
-	
+
 	/**
 	 * Check that all tweetable message texts are of an acceptable length.
 	 * This is 109 characters max if timestamps are enabled, or 123 characters max if timestamps are not enabled.
@@ -120,46 +120,56 @@ BaseTwitterDataSource.prototype = {
 	 */
 	_areTweetMessageLengthsOk: function() {
 		var self = this;
-		
+		var messages = [];
+
+		var getMessagesFromDialogue = function(dialogue){
+			if (typeof dialogue === "object"){
+				Object.keys(dialogue).forEach(function(key){
+					getMessagesFromDialogue(dialogue[key]);
+				});
+			}
+			else {
+				if (typeof dialogue === "string"){
+					messages.push(dialogue);
+				}
+			}
+		}
+
 		return new RSVP.Promise( function(resolve, reject) {
 			var valid = true;
-			Object.keys( self.config.twitter ).forEach( function(configItemKey) {
-				// We only want to process the objects containing language/message pairs here,
-				// not the single properties.
-				var configItem = self.config.twitter[configItemKey];
-				if (typeof configItem === "object") {
-					var maxLength = 140; // Maximum tweet length
-					maxLength -= 17; // Minus username, @ sign and space = 123
-					if ( self.config.twitter.addTimestamp ) maxLength -= 14; // Minus 13 digit timestamp + space = 109 (13 digit timestamp is ok until the year 2286)
-					Object.keys( configItem ).forEach( function(messageKey) {
-						var message = configItem[messageKey];
-						// Twitter shortens (or in some cases lengthens) all URLs to a length, which slowly varies over time.
-						// We use config.twitter.url_length to keep track of the current length, and here replace url length
-						// with the resulting t.co output length in calculations for checking tweet length
-						var length = message.length;
-						var matches = message.match(/http[^ ]*/g);
-						if (matches) {
-							for (var i = 0; i < matches.length; i++) {
-								length += self.config.twitter.url_length - matches[i].length;
-							}
-						}
 
-						if ( length > maxLength ) {
-							valid = false;
-							self.logger.error( "Message " + configItemKey + "." + messageKey + " '" + message + "' is too long (" + message.length + " chars)" );
-							reject( "Message " + configItemKey + "." + messageKey + " '" + message + "' is too long (" + message.length + " chars)" );
-						}
-					});
+			//self.logger.info(self.dialogue);
+
+			getMessagesFromDialogue(self.dialogue);
+			for (var i = 0; i < messages.length; i++){
+				var message = messages[i];
+				var maxLength = 140; // Maximum tweet length
+		    maxLength -= 17; // Minus username, @ sign and space = 123
+		    if ( self.config.twitter.addTimestamp ) maxLength -= 14; // Minus 13 digit timestamp + space = 109 (13 digit timestamp is ok until the year 2286)
+				// Twitter shortens (or in some cases lengthens) all URLs to a length, which slowly varies over time.
+				// We use config.twitter.url_length to keep track of the current length, and here replace url length
+				// with the resulting t.co output length in calculations for checking tweet length
+				var length = message.length;
+				var matches = message.match(/http[^ ]*/g);
+				if (matches) {
+					for (var i = 0; i < matches.length; i++) {
+						length += self.config.twitter.url_length - matches[i].length;
+					}
 				}
-			});
-			
+				if ( length > maxLength ) {
+					valid = false;
+					self.logger.error( "Message " + message + "' is too long (" + message.length + " chars)" );
+					reject( "Message " + message + "' is too long (" + message.length + " chars)" );
+				}
+			};
+
 			if (valid) {
 				self.logger.info("_areTweetMessageLengthsOk: Tweet lengths verified");
 				resolve();
 			}
 		});
 	},
-	
+
 	/**
 	 * Send @reply Twitter message
 	 * @param {string} username Twitter username of user to send reply to
@@ -205,7 +215,7 @@ BaseTwitterDataSource.prototype = {
 			}
 		}
 	},
-	
+
 	/**
 	 * Insert an invitee - i.e. a user we've invited to participate.
 	 * @param {string} username Twitter username to log as invited user
@@ -223,227 +233,8 @@ BaseTwitterDataSource.prototype = {
 			}
 		);
 	},
-	
-	/**
-	 * Insert an unconfirmed report - i.e. has geo coordinates but is not addressed.
-	 * @param {string} createdAt ISO8601 timestamp tweet was created at
-	 * @param {string} coordinates Geo coordinates in WKT format (long lat)
-	 */
-	_baseInsertUnConfirmed: function(createdAt, coordinates) {
-		var self = this;
 
-		self.reports.dbQuery(
-			{
-				text : "INSERT INTO " + self.config.pg.table_unconfirmed + " " +
-					"(created_at, the_geom) " +
-					"VALUES ( " +
-					"$1, " +
-					"ST_GeomFromText('POINT(' || $2 || ')',4326)" +
-					");",
-				values : [
-				    createdAt,
-				    coordinates
-				]
-			},
-			function(result) {
-				self.logger.info('Logged unconfirmed tweet report');
-			}
-		);
-	},
-	
-	/**
-	 * Resolve message code from config.twitter using passed language codes.
-	 * Will fall back to trying to resolve message using default language set in configuration.
-	 * @param {string} code Message code to lookup in config.twitter
-	 * @param {Array} langs Array of language codes to try and resolve in order of preference
-	 * @returns {?string} Message text, or null if not resolved.
-	 */
-	_baseGetMessage: function(code, langs) {
-		var self = this;
 
-		// Find a matching code if we can
-		if (self.config.twitter[code]) {
-			for (var i=0; i<langs.length; i++) {
-				var lang = langs[i];
-				if (self.config.twitter[code][lang]) return self.config.twitter[code][lang];
-			}
-			// If we haven't found a code, try the default language
-			if (self.config.twitter[code][self.config.twitter.defaultLanguage]) return self.config.twitter[code][self.config.twitter.defaultLanguage];
-		}
-
-		self.logger.warn( "_getMessage: Code could not be resolved for '" + code + "' and langs '" + langs +"'" );
-		return null;
-	},
-	
-	/**
-	 * Insert a non-spatial tweet report - i.e. we got an addressed tweet without geo coordinates.
-	 * @param {string} username Username of sender of the tweet
-	 * @param {string} createdAt Date tweet created in ISO8601 format
-	 * @param {string} text Body text of tweet
-	 * @param {string} hashtags Hashtags used in tweet as JSON
-	 * @param {string} urls URLs used in tweet as JSON
-	 * @param {string} userMentions Users mentioned in tweet as JSON
-	 * @param {string} lang Primary language of the tweet
-	 */
-	_baseInsertNonSpatial: function(username, createdAt, text, hashtags, urls, userMentions, lang) {
-		var self = this;
-
-		self.reports.dbQuery(
-			{
-				text : "INSERT INTO " + self.config.pg.table_nonspatial_tweet_reports + " " +
-					"(created_at, text, hashtags, urls, user_mentions, lang) " +
-					"VALUES (" +
-					"$1, " +
-					"$2, " +
-					"$3, " +
-					"$4, " +
-					"$5, " +
-					"$6" +
-					");",
-				values : [
-					createdAt,
-					text,
-					hashtags,
-					urls,
-					userMentions,
-					lang
-				]
-			},
-
-			function(result) {
-				self.logger.info('Inserted non-spatial tweet');
-				
-				self._ifNewUser( username, function(result) {
-					self.reports.dbQuery(
-						{
-							text : "INSERT INTO " + self.config.pg.table_nonspatial_users + " (user_hash) VALUES (md5($1));",
-							values : [ username ]
-						},
-						function(result) {
-							self.logger.info("Inserted non-spatial user");
-						}
-					);
-				});
-			}
-		);
-	},
-	
-	/**
-	 * Insert a confirmed report - i.e. has geo coordinates and is addressed.
-	 * Store both the tweet information and the user hash.
-	 * @param {string} username Username of sender of the tweet
-	 * @param {array} langs Array of languages describing tweet 
-	 * @param {string} tweetId ID of tweet
-	 * @param {string} createdAt Date tweet created in ISO8601 format
-	 * @param {string} text Body text of tweet
-	 * @param {string} hashtags Hashtags used in tweet as JSON
-	 * @param {string} textUrls URLs used in tweet as JSON
-	 * @param {string} userMentions Users mentioned in tweet as JSON
-	 * @param {string} lang Primary language of the tweet
-	 * @param {string} url Link to the tweet
-	 * @param {string} theGeom Geo coordiantes in WKT format (long, lat)
-	 */
-	_baseInsertConfirmed: function(username, langs, tweetId, createdAt, text, hashtags, textUrls, userMentions, lang, url, theGeom) {
-		var self = this;
-
-		//insertUser with count -> upsert
-		self.reports.dbQuery(
-			{
-				text : "INSERT INTO " + self.config.pg.table_tweets + " " +
-					"(created_at, text, hashtags, text_urls, user_mentions, lang, url, tweet_id, the_geom) " +
-					"VALUES (" +
-					"$1, " +
-					"$2, " +
-					"$3, " +
-					"$4, " +
-					"$5, " +
-					"$6, " +
-					"$7, " +
-					"$8, " +
-					"ST_GeomFromText('POINT(' || $9 || ')',4326)" +
-					") RETURNING pkey;",
-				values : [
-				    createdAt,
-				    text,
-				    hashtags,
-				    textUrls,
-				    userMentions,
-				    lang,
-					url,
-					tweetId,
-				    theGeom
-				]
-			},
-			function(result) {
-				var report_id_foreign_key = result.rows[0].pkey; // primary key for tweet reports = foreign key for all_reports table
-				self.logger.info('Logged confirmed tweet report');
-				self.reports.dbQuery(
-					{
-						text : "SELECT upsert_tweet_users(md5($1));",
-						values : [
-						    username
-						]
-					},
-					function(result) {
-						self.logger.info('Logged confirmed tweet user');
-						self.reports.dbQuery(
-							{
-								text: "SELECT pkey FROM "+self.config.pg.table_all_reports+" WHERE fkey = $1 AND source = 'twitter';",
-								values : [
-									report_id_foreign_key
-								]
-							},
-							function(result) {
-								self.logger.info('Logged confirmed tweet user');
-								// Get correct response message
-								var message = self._getMessage('thanks_text', langs);
-								// Append ID of user's report
-								message += result.rows[0].pkey;
-								// Send the user a thank-you tweet; send this for every confirmed report, timestamp not needed because of unique url
-								self._baseSendReplyTweet( username, tweetId, message );
-							}
-						);
-					}
-				);
-			}
-		);
-	},
-	
-	/**
-	 * Update a report status to verified if a matching tweet_id is found in the tweet_reports table
-	 * @param {integer} retweet_id The retweeted twitter ID which may be a confirmed report
-	 */
-	_processVerifiedReport: function(retweet_id) {
-		var self = this;
-		
-		// Check to see if the referenced report is confirmed
-		self.reports.dbQuery(
-			{
-				text: "SELECT pkey FROM " + self.config.pg.table_tweets + " WHERE tweet_id = $1;",
-				values : [retweet_id]
-			},
-			// Update status
-			function(result) {
-				if (result && result.rows && result.rows.length === 1 && result.rows[0]) {
-					self.reports.dbQuery(
-						{
-							text : "UPDATE " + self.config.pg.table_all_reports + " " +
-								"SET STATUS = 'verified' WHERE fkey = $1 AND source = 'twitter';",
-							values : [
-								result.rows[0].pkey
-							]
-						},
-						function(result) {
-							self.logger.info('Logged verified tweet report');
-						}
-					);
-				} else {
-					self.logger.debug("Not performing callback as tweet not found in database");
-				}
-			}
-		);
-	},
-	
 	/**
 	 * Stop realtime processing of tweets and start caching tweets until caching mode is disabled.
 	 */
