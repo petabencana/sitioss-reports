@@ -177,7 +177,7 @@ BaseTwitterDataSource.prototype = {
 	 * @param {string} message The tweet text to send
 	 * @param {function} success Callback function called on success
 	 */
-	_baseSendReplyTweet: function(username, tweetId, message, success) {
+	_baseSendReplyTweet: function(username, tweetId, media_id, message, success) {
 		var self = this;
 
 		var usernameInBlacklist = false;
@@ -193,7 +193,8 @@ BaseTwitterDataSource.prototype = {
 		} else {
 			// Tweet is not to ourself, attempt to send
 			var params = {
-				in_reply_to_status_id: tweetId
+				in_reply_to_status_id: tweetId,
+				media_ids : media_id
 			};
 
 			message = '@' + username + ' ' + message;

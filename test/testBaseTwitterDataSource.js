@@ -364,54 +364,54 @@ describe( 'BaseTwitterDataSource', function() {
 		});
 
 		it( "sendReplyTweet calls updateStatus and executes callback", function() {
-			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.value( successCallbackRan ).is( true );
 			test.value( updateStatusRan ).is( true );
 		});
 
 
 		it( "Tweet not sent to usernames in usernameReplyBlacklist", function() {
-			baseTwitterDataSource._baseSendReplyTweet( 'zaphod', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'zaphod', tweetId, null, message, success );
 			test.value( successCallbackRan ).is( false );
 
-			baseTwitterDataSource._baseSendReplyTweet( 'ford', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'ford', tweetId, null, message, success );
 			test.value( successCallbackRan ).is( false );
 
-			baseTwitterDataSource._baseSendReplyTweet( 'arthur', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'arthur', tweetId, null, message, success );
 			test.value( successCallbackRan ).is( false );
 		});
 
 		it( 'Tweet not sent if send_enabled is false', function() {
 			baseTwitterDataSource.config.twitter.send_enabled = false;
-			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.value( updateStatusRan ).is( false );
 		});
 
 		it( 'Callback executed if send_enabled is false', function() {
 			baseTwitterDataSource.config.twitter.send_enabled = false;
-			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.value( successCallbackRan ).is( true );
 		});
 
 		it( 'Callback not executed if error tweeting occurs', function() {
 			baseTwitterDataSource.twitter.tweetSendWillError = true;
-			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.value( successCallbackRan ).is( false );
 		});
 
 		it( 'Tweet is reply to ID from tweetActivity', function() {
-			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.value( updateStatusParams.in_reply_to_status_id ).is( tweetId );
 		});
 
 		it( 'Timestamp is added to tweet', function() {
 			baseTwitterDataSource.config.twitter.addTimestamp = false;
-			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.string( updateStatusMessage ).contains( message );
 			test.string( updateStatusMessage ).notMatch( / [0-9]*$/ );
 
 			baseTwitterDataSource.config.twitter.addTimestamp = true;
-			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.string( updateStatusMessage ).contains( message );
 			test.string( updateStatusMessage ).match( / [0-9]*$/ );
 		});
