@@ -177,7 +177,7 @@ BaseTwitterDataSource.prototype = {
 	 * @param {string} message The tweet text to send
 	 * @param {function} success Callback function called on success
 	 */
-	_baseSendReplyTweet: function(username, tweetId, media_id, message, success) {
+	_baseSendReplyTweet: function(username, tweetId, message, media_id, success) {
 		var self = this;
 
 		var usernameInBlacklist = false;
