@@ -406,12 +406,12 @@ describe( 'BaseTwitterDataSource', function() {
 
 		it( 'Timestamp is added to tweet', function() {
 			baseTwitterDataSource.config.twitter.addTimestamp = false;
-			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, null, success );
 			test.string( updateStatusMessage ).contains( message );
 			test.string( updateStatusMessage ).notMatch( / [0-9]*$/ );
 
 			baseTwitterDataSource.config.twitter.addTimestamp = true;
-			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
+			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, message, null, success );
 			test.string( updateStatusMessage ).contains( message );
 			test.string( updateStatusMessage ).match( / [0-9]*$/ );
 		});
