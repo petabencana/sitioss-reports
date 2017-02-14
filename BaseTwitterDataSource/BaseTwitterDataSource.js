@@ -174,10 +174,11 @@ BaseTwitterDataSource.prototype = {
 	 * Send @reply Twitter message
 	 * @param {string} username Twitter username of user to send reply to
 	 * @param {string} tweetId ID of tweet to send reply to
+	 * @param {string} media_id The media_id of twitter media to embedd in tweet
 	 * @param {string} message The tweet text to send
 	 * @param {function} success Callback function called on success
 	 */
-	_baseSendReplyTweet: function(username, tweetId, message, media_id, success) {
+	_baseSendReplyTweet: function(username, tweetId, media_id, message, success) {
 		var self = this;
 
 		var usernameInBlacklist = false;
