@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config()
+require('dotenv').config();
 
 // sample-config.js - sample configuration file for cognicity-reports module
 
@@ -20,11 +20,11 @@ require('dotenv').config()
  */
 var config = {};
 
-config.dataSources = [ 'detik', 'floodgauge', 'gnip-powertrack' ];
+config.dataSources = [ 'gnip-powertrack' ];
 
 // Logging configuration
 config.logger = {};
-config.logger.level = process.env.LOG_LEVEL; // What level to log at; info, verbose or debug are most useful. Levels are (npm defaults): silly, debug, verbose, info, warn, error.
+config.logger.level = 'info';//process.env.LOG_LEVEL; // What level to log at; info, verbose or debug are most useful. Levels are (npm defaults): silly, debug, verbose, info, warn, error.
 config.logger.maxFileSize = 1024 * 1024 * 100; // Max file size in bytes of each log file; default 100MB
 config.logger.maxFiles = 10; // Max number of log files kept
 config.logger.logDirectory = null; // Set this to a full path to a directory - if not set logs will be written to the application directory.
@@ -32,7 +32,7 @@ config.logger.filename = 'cognicity-reports'; // base filename to use
 
 // Postgres database connection
 config.pg = {};
-config.pg.conString = 'postgres://'+process.env.PGUSER+':'+process.env.PGPASSWORD+'@'+process.env.PGHOST+':'+process.env.PGPORT+'/'+process.env.PGDATABASE; // db connection settings
+config.pg.conString = 'postgres://postgres@localhost/cognicity'; // db connection settings
 config.pg.reconnectionDelay = 1000 * 60 * 3; // Delay before attempting a reconnection in ms
 config.pg.reconnectionAttempts = 5; // Number of times to attempt reconnection before notifying admin and exiting
 

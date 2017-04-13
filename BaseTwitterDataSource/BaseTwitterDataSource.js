@@ -133,7 +133,7 @@ BaseTwitterDataSource.prototype = {
 					messages.push(dialogue);
 				}
 			}
-		}
+		};
 
 		return new RSVP.Promise( function(resolve, reject) {
 			var valid = true;
@@ -152,8 +152,8 @@ BaseTwitterDataSource.prototype = {
 				var length = message.length;
 				var matches = message.match(/http[^ ]*/g);
 				if (matches) {
-					for (var i = 0; i < matches.length; i++) {
-						length += self.config.twitter.url_length - matches[i].length;
+					for (var j = 0; j < matches.length; j++) {
+						length += self.config.twitter.url_length - matches[j].length;
 					}
 				}
 				if ( length > maxLength ) {
@@ -161,7 +161,7 @@ BaseTwitterDataSource.prototype = {
 					self.logger.error( "Message " + message + "' is too long (" + message.length + " chars)" );
 					reject( "Message " + message + "' is too long (" + message.length + " chars)" );
 				}
-			};
+			}
 
 			if (valid) {
 				self.logger.info("_areTweetMessageLengthsOk: Tweet lengths verified");
