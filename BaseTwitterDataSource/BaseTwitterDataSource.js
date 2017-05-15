@@ -195,21 +195,31 @@ BaseTwitterDataSource.prototype = {
 			// Tweet is not to ourself, attempt to send
 			var params = {
 				in_reply_to_status_id: tweetId,
-				media_ids : media_id
+				media_ids : media_id,
+				status: message
 			};
 
 			message = '@' + username + ' ' + message;
 			if ( self.config.twitter.addTimestamp ) message = message + " " + new Date().getTime();
 
 			if (self.config.twitter.send_enabled === true){
-				self.twitter.updateStatus(message, params, function(err, data){
+				//Make a POST call to send a tweet to the user
+			  self.twitter.post('statuses/update', params)
+			    .then(function (tweet) {
+			      self.logger.debug( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
+						if (success) success();
+			    })
+			    .catch(function (error) {
+			      self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + err );
+			    })
+				/*self.twitter.updateStatus(message, params, function(err, data){
 					if (err) {
 						self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + err );
 					} else {
 						self.logger.debug( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
 						if (success) success();
 					}
-				});
+				});*/
 			} else { // for testing
 				self.logger.info( '_sendReplyTweet: In test mode - no message will be sent. Callback will still run.' );
 				self.logger.info( '_sendReplyTweet: Would have tweeted: "' + message + '" with params ' + JSON.stringify(params) );
