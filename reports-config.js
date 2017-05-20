@@ -32,7 +32,7 @@ config.logger.filename = 'cognicity-reports'; // base filename to use
 
 // Postgres database connection
 config.pg = {};
-config.pg.conString = 'postgres://postgres@localhost/cognicity'; // db connection settings
+config.pg.conString = 'postgres://'+process.env.PGUSER+':'+process.env.PGPASSWORD+'@'+process.env.PGHOST+':'+process.env.PGPORT+'/'+process.env.PGDATABASE; // db connection settings
 config.pg.reconnectionDelay = 1000 * 60 * 3; // Delay before attempting a reconnection in ms
 config.pg.reconnectionAttempts = 5; // Number of times to attempt reconnection before notifying admin and exiting
 
