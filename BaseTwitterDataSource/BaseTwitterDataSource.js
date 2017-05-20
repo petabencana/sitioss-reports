@@ -98,14 +98,14 @@ BaseTwitterDataSource.prototype = {
 		var self = this;
 
 		return new RSVP.Promise( function(resolve, reject) {
-			self.twitter.verifyCredentials(function (err, data) {
-				if (err) {
+			self.twitter.get('account/verify_credentials', function (err, data, response) {
+				if (!err & response.statusCode === 200) {
+					self.logger.info("twitter.verifyCredentials: Twitter credentials succesfully verified");
+					resolve();
+				} else {
 					self.logger.error("twitter.verifyCredentials: Error verifying credentials: " + err);
 					self.logger.error("Fatal error: Application shutting down");
 					reject("twitter.verifyCredentials: Error verifying credentials: " + err);
-				} else {
-					self.logger.info("twitter.verifyCredentials: Twitter credentials succesfully verified");
-					resolve();
 				}
 			});
 		});
@@ -193,33 +193,24 @@ BaseTwitterDataSource.prototype = {
 			self.logger.info( '_sendReplyTweet: Tweet user is in usernameReplyBlacklist, not sending' );
 		} else {
 			// Tweet is not to ourself, attempt to send
+			message = '@' + username + ' ' + message;
+			if ( self.config.twitter.addTimestamp ) message = message + " " + new Date().getTime();
 			var params = {
 				in_reply_to_status_id: tweetId,
 				media_ids : media_id,
 				status: message
 			};
 
-			message = '@' + username + ' ' + message;
-			if ( self.config.twitter.addTimestamp ) message = message + " " + new Date().getTime();
-
 			if (self.config.twitter.send_enabled === true){
 				//Make a POST call to send a tweet to the user
-			  self.twitter.post('statuses/update', params)
-			    .then(function (tweet) {
-			      self.logger.debug( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
-						if (success) success();
-			    })
-			    .catch(function (error) {
-			      self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + err );
-			    })
-				/*self.twitter.updateStatus(message, params, function(err, data){
-					if (err) {
+				self.twitter.post('statuses/update', params,  function(error, tweet, response) {
+				  if(error) {
 						self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + err );
 					} else {
-						self.logger.debug( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
-						if (success) success();
+						self.logger.info( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
+						if(success) success();
 					}
-				});*/
+				});
 			} else { // for testing
 				self.logger.info( '_sendReplyTweet: In test mode - no message will be sent. Callback will still run.' );
 				self.logger.info( '_sendReplyTweet: Would have tweeted: "' + message + '" with params ' + JSON.stringify(params) );
