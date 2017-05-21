@@ -6,6 +6,7 @@
   "preferGlobal": false,
   "private": true,
   "dependencies": {
+    "twitter": "^1.7.0",
     "dotenv": "^4.0.0",
     "pg": "^6.1.2",
     "rsvp": "^3.3.3",
