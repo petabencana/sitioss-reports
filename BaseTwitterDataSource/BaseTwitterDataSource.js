@@ -98,14 +98,14 @@ BaseTwitterDataSource.prototype = {
 		var self = this;
 
 		return new RSVP.Promise( function(resolve, reject) {
-			self.twitter.verifyCredentials(function (err, data) {
-				if (err) {
+			self.twitter.get('account/verify_credentials', function (err, data, response) {
+				if (!err & response.statusCode === 200) {
+					self.logger.info("twitter.verifyCredentials: Twitter credentials succesfully verified");
+					resolve();
+				} else {
 					self.logger.error("twitter.verifyCredentials: Error verifying credentials: " + err);
 					self.logger.error("Fatal error: Application shutting down");
 					reject("twitter.verifyCredentials: Error verifying credentials: " + err);
-				} else {
-					self.logger.info("twitter.verifyCredentials: Twitter credentials succesfully verified");
-					resolve();
 				}
 			});
 		});
@@ -133,7 +133,7 @@ BaseTwitterDataSource.prototype = {
 					messages.push(dialogue);
 				}
 			}
-		}
+		};
 
 		return new RSVP.Promise( function(resolve, reject) {
 			var valid = true;
@@ -152,8 +152,8 @@ BaseTwitterDataSource.prototype = {
 				var length = message.length;
 				var matches = message.match(/http[^ ]*/g);
 				if (matches) {
-					for (var i = 0; i < matches.length; i++) {
-						length += self.config.twitter.url_length - matches[i].length;
+					for (var j = 0; j < matches.length; j++) {
+						length += self.config.twitter.url_length - matches[j].length;
 					}
 				}
 				if ( length > maxLength ) {
@@ -161,7 +161,7 @@ BaseTwitterDataSource.prototype = {
 					self.logger.error( "Message " + message + "' is too long (" + message.length + " chars)" );
 					reject( "Message " + message + "' is too long (" + message.length + " chars)" );
 				}
-			};
+			}
 
 			if (valid) {
 				self.logger.info("_areTweetMessageLengthsOk: Tweet lengths verified");
@@ -174,6 +174,7 @@ BaseTwitterDataSource.prototype = {
 	 * Send @reply Twitter message
 	 * @param {string} username Twitter username of user to send reply to
 	 * @param {string} tweetId ID of tweet to send reply to
+	 * @param {string} media_id The media_id of twitter media to embedd in tweet
 	 * @param {string} message The tweet text to send
 	 * @param {function} success Callback function called on success
 	 */
@@ -192,21 +193,22 @@ BaseTwitterDataSource.prototype = {
 			self.logger.info( '_sendReplyTweet: Tweet user is in usernameReplyBlacklist, not sending' );
 		} else {
 			// Tweet is not to ourself, attempt to send
-			var params = {
-				in_reply_to_status_id: tweetId,
-				media_ids : media_id
-			};
-
 			message = '@' + username + ' ' + message;
 			if ( self.config.twitter.addTimestamp ) message = message + " " + new Date().getTime();
+			var params = {
+				in_reply_to_status_id: tweetId,
+				media_ids : media_id,
+				status: message
+			};
 
 			if (self.config.twitter.send_enabled === true){
-				self.twitter.updateStatus(message, params, function(err, data){
-					if (err) {
+				//Make a POST call to send a tweet to the user
+				self.twitter.post('statuses/update', params,  function(error, tweet, response) {
+				  if(error) {
 						self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + err );
 					} else {
-						self.logger.debug( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
-						if (success) success();
+						self.logger.info( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
+						if(success) success();
 					}
 				});
 			} else { // for testing
