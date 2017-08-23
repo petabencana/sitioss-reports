@@ -24,9 +24,9 @@
   },
   "scripts": {
     "test": "npm run jshint && npm run mocha",
-    "jshint": "jshint app.js Reports.js sample-reports-config.js test/test-config.js test/testApp.js test/testReports.js",
+    "jshint": "jshint app.js Reports.js reports-config.js test/test-config.js test/testApp.js test/testReports.js",
     "mocha": "mocha test",
-    "build-docs": "jsdoc -d docs package.json sample-reports-config.js app.js Reports.js",
+    "build-docs": "jsdoc -d docs package.json reports-config.js app.js Reports.js",
     "build": "npm test && npm run build-docs && npm run coverage",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha"
   }

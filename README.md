@@ -86,7 +86,7 @@ function disableCacheMode() {}
 ```
 
 ### Configuration
-App configuration parameters are stored in a configuration file which is parsed by app.js. See sample-reports-config.js for an example configuration.
+App configuration parameters are stored in a configuration file which is parsed by app.js. See reports-config.js and sample.env for an example configuration.
 
 #### Data Sources
 * dataSources - List of data source folder names which the module will run when started
