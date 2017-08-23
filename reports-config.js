@@ -20,14 +20,14 @@ require('dotenv').config();
  */
 var config = {};
 
-config.dataSources = [ 'gnip-powertrack' ];
+config.dataSources = [ 'gnip-powertrack', 'detik', 'floodgauge' ];
 
 // Logging configuration
 config.logger = {};
-config.logger.level = 'info';//process.env.LOG_LEVEL; // What level to log at; info, verbose or debug are most useful. Levels are (npm defaults): silly, debug, verbose, info, warn, error.
+config.logger.level = process.env.LOG_LEVEL; // What level to log at; info, verbose or debug are most useful. Levels are (npm defaults): silly, debug, verbose, info, warn, error.
 config.logger.maxFileSize = 1024 * 1024 * 100; // Max file size in bytes of each log file; default 100MB
 config.logger.maxFiles = 10; // Max number of log files kept
-config.logger.logDirectory = null; // Set this to a full path to a directory - if not set logs will be written to the application directory.
+config.logger.logDirectory = process.env.LOG_DIR; // Set this to a full path to a directory - if not set logs will be written to the application directory.
 config.logger.filename = 'cognicity-reports'; // base filename to use
 
 // Postgres database connection
