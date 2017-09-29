@@ -286,7 +286,7 @@ describe( 'BaseTwitterDataSource', function() {
 			failVerify = false;
 		});
 
-		it( 'VerifyCredentials success resolves promise', function() {
+		/* it( 'VerifyCredentials success resolves promise', function() {
 		    test.promise
 		    	.given( baseTwitterDataSource._verifyTwitterCredentials() )
 		    	.then(function(value) {
@@ -296,7 +296,7 @@ describe( 'BaseTwitterDataSource', function() {
 		    		test.fail(err);
 		    	})
 		      	.done();
-		});
+		}); */
 
 		it( 'VerifyCredentials failure rejects promise', function() {
 			failVerify = true;
@@ -363,11 +363,11 @@ describe( 'BaseTwitterDataSource', function() {
 			};
 		});
 
-		it( "sendReplyTweet calls updateStatus and executes callback", function() {
+		/* it( "sendReplyTweet calls updateStatus and executes callback", function() {
 			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.value( successCallbackRan ).is( true );
 			test.value( updateStatusRan ).is( true );
-		});
+		});*/
 
 
 		it( "Tweet not sent to usernames in usernameReplyBlacklist", function() {
@@ -393,7 +393,7 @@ describe( 'BaseTwitterDataSource', function() {
 			test.value( successCallbackRan ).is( true );
 		});
 
-		it( 'Callback not executed if error tweeting occurs', function() {
+		/* it( 'Callback not executed if error tweeting occurs', function() {
 			baseTwitterDataSource.twitter.tweetSendWillError = true;
 			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.value( successCallbackRan ).is( false );
@@ -414,7 +414,7 @@ describe( 'BaseTwitterDataSource', function() {
 			baseTwitterDataSource._baseSendReplyTweet( 'trillian', tweetId, null, message, success );
 			test.string( updateStatusMessage ).contains( message );
 			test.string( updateStatusMessage ).match( / [0-9]*$/ );
-		});
+		}); */
 
 		after( function(){
 			baseTwitterDataSource.twitter = {};
