@@ -205,7 +205,7 @@ BaseTwitterDataSource.prototype = {
 				//Make a POST call to send a tweet to the user
 				self.twitter.post('statuses/update', params,  function(error, tweet, response) {
 				  if(error) {
-						self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + err );
+						self.logger.error( 'Tweeting "' + message + '" with params "' + JSON.stringify(params) + '" failed: ' + JSON.stringify(error) );
 					} else {
 						self.logger.info( 'Sent tweet: "' + message + '" with params ' + JSON.stringify(params) );
 						if(success) success();
