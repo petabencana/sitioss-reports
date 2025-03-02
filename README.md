@@ -1,5 +1,5 @@
-# cognicity-reports
-Master module for collecting reports for the [CogniCity framework](http://cognicity.info/cognicity/)
+# sitioss-reports
+Master module for collecting reports for the [Siti OSS framework](http://sitioss.info/)
 
 [![Build Status](https://travis-ci.org/smart-facility/cognicity-reports.svg?branch=master)](https://travis-ci.org/smart-facility/cognicity-reports)
 
@@ -39,7 +39,7 @@ Then you can run `npm install`.
 ### Data Sources
 You will need at least one data source configured to run the reports module.
 
-Cognicity data sources are included as submodules of this master reports module.
+Siti OSS data sources are included as submodules of this master reports module.
 
 You will need to configure the reports module to use at least one of them (see Configuration section below).
 
