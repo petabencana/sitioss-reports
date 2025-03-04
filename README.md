@@ -1,13 +1,8 @@
 # sitioss-reports
 Master module for collecting reports for the [Siti OSS framework](http://sitioss.info/)
 
-[![Build Status](https://travis-ci.org/smart-facility/cognicity-reports.svg?branch=master)](https://travis-ci.org/smart-facility/cognicity-reports)
-
-DOI for current stable release [v2.0.0](https://github.com/smart-facility/cognicity-reports/releases/tag/v2.0.0):
-[![DOI](https://zenodo.org/badge/19201/smart-facility/cognicity-reports.svg)](https://zenodo.org/badge/latestdoi/19201/smart-facility/cognicity-reports)
-
 ### API Documentation
-[http://cognicity.info/cognicity/api-docs/cognicity-reports/index.html](http://cognicity.info/cognicity/api-docs/cognicity-reports/index.html)
+[https://docs.petabencana.id/master-1] 
 
 ### Dependencies
 * [NodeJS](http://nodejs.org) version 4.2.1 or compatible
@@ -19,7 +14,7 @@ DOI for current stable release [v2.0.0](https://github.com/smart-facility/cognic
 If you're going to commit changes to the JavaScript, be sure to run 'npm test' first - and fix any issues that it complains about, otherwise the build will fail when you push the commit.
 
 ### Installation
-Download the source code for cognicity-reports from github: [http://github.com/smart-facility/cognicity-reports](https://github.com/smart-facility/cognicity-reports) or view the CogniCity installation documentation at [http://cognicity.info](http://cognicity.info).
+Download the source code for cognicity-reports from github: [http://github.com/petabencana/sitioss-reports]) 
 
 Install the node dependencies in package.json using NPM: `npm install`. You will need to repeat that for each of the submodules (in the submodule directories).
 
@@ -104,7 +99,7 @@ App configuration parameters are stored in a configuration file which is parsed 
 * reconnectionAttempts - Number of times to attempt to reconnect before dying
 
 ### PostgreSQL/PostGIS schema
-* see the [cognicity-schema](https://github.com/smart-facility/cognicity-schema) project for schema files
+* see the [sitioss-schema](https://github.com/petabencana/sitioss-schema) project for schema files
 
 ### Run
 During development, the app can be run using node like so:
