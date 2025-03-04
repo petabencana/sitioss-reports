@@ -14,7 +14,7 @@ Master module for collecting reports for the [Siti OSS framework](http://sitioss
 If you're going to commit changes to the JavaScript, be sure to run 'npm test' first - and fix any issues that it complains about, otherwise the build will fail when you push the commit.
 
 ### Installation
-Download the source code for cognicity-reports from github: [http://github.com/petabencana/sitioss-reports]) 
+Download the source code for sitioss-reports from github: [http://github.com/petabencana/sitioss-reports]) 
 
 Install the node dependencies in package.json using NPM: `npm install`. You will need to repeat that for each of the submodules (in the submodule directories).
 
